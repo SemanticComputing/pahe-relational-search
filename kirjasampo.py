@@ -91,4 +91,4 @@ write_graph = Graph()
 
 book_depicts_place(graph, write_graph)
 
-write_graph.serialize('kirjasampo_books_depict_place.ttl', format='turtle')
+write_graph.serialize('relations/kirjasampo_books_depict_place.ttl', format='turtle')
