@@ -100,3 +100,10 @@ graph.bind('skos', namespace.SKOS)
 
 schema(graph)
 
+graph.parse('relations/careers_to_places.ttl', format='turtle')
+graph.parse('relations/kulttuurisampo_paintings.ttl', format='turtle')
+graph.parse('relations/nbf_life_relations.ttl', format='turtle')
+graph.parse('relations/snellman_relations.ttl', format='turtle')
+graph.parse('relations/kirjasampo_books_depict_place.ttl', format='turtle')
+
+graph.serialize('relations/pahe_relations.ttl', format='turtle')

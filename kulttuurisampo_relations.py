@@ -48,10 +48,6 @@ def places(g, place):
 
 def painting_depicts_relations(read_graph, write_graph):
 
-    write_graph.add((rel.paintingDepictsPlace, namespace.RDF.type, rel.Type))
-    write_graph.add((rel.paintingDepictsPlace, namespace.SKOS.prefLabel,
-                     Literal('A on maalannut teoksen joku kuvaa paikkaa B', lang='fi')))
-
     subjects = open("csv/subjects_ku_sa.csv", "r")
     lukija = csv.reader(subjects)
 
@@ -74,13 +70,12 @@ def painting_depicts_relations(read_graph, write_graph):
 
 
 
-
 graph = Graph()
 graph.parse('graphs/corrected_kulsa_links.ttl', format='turtle')
 graph.parse('NBF/places.ttl', format='turtle')
 
-write_graph = Graph()
+w_graph = Graph()
 
-painting_depicts_relations(graph, write_graph)
+painting_depicts_relations(graph, w_graph)
 
-write_graph.serialize('relations/kulttuurisampo_paintings.ttl', format='turtle')
+w_graph.serialize('relations/kulttuurisampo_paintings.ttl', format='turtle')
