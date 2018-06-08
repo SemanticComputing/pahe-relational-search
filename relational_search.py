@@ -3,6 +3,10 @@ from rdflib import Graph, Literal, namespace, Namespace, XSD, URIRef
 rel = Namespace('http://ldf.fi/relsearch/')
 
 def schema(g):
+
+    g.add((rel.place, namespace.RDF.type, namespace.RDFS.Class))
+    g.add((rel.place, namespace.SKOS.prefLabel, Literal('Paikka', lang='fi')))
+
     g.add((rel.relation, namespace.RDF.type, namespace.RDFS.Class))
     g.add((rel.relation, namespace.SKOS.prefLabel, Literal('Yhteys kahden asian välillä', lang='fi')))
 
@@ -93,6 +97,15 @@ def schema(g):
 
     g.serialize('relations/schema.ttl', format='turtle')
 
+def compile_ttl(graph):
+    graph.parse('relations/careers_to_places.ttl', format='turtle')
+    graph.parse('relations/kulttuurisampo_paintings.ttl', format='turtle')
+    graph.parse('relations/nbf_life_relations.ttl', format='turtle')
+    graph.parse('relations/snellman_relations.ttl', format='turtle')
+    graph.parse('relations/kirjasampo_books_depict_place.ttl', format='turtle')
+
+    graph.serialize('relations/pahe_relations.ttl', format='turtle')
+
 graph = Graph()
 
 graph.bind('', rel)
@@ -100,10 +113,4 @@ graph.bind('skos', namespace.SKOS)
 
 schema(graph)
 
-graph.parse('relations/careers_to_places.ttl', format='turtle')
-graph.parse('relations/kulttuurisampo_paintings.ttl', format='turtle')
-graph.parse('relations/nbf_life_relations.ttl', format='turtle')
-graph.parse('relations/snellman_relations.ttl', format='turtle')
-graph.parse('relations/kirjasampo_books_depict_place.ttl', format='turtle')
 
-graph.serialize('relations/pahe_relations.ttl', format='turtle')

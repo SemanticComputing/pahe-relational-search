@@ -3,6 +3,8 @@ import requests
 
 rel = Namespace('http://ldf.fi/relsearch/')
 
+# need nbf-places and yso-places
+
 def create_places_from_nbf(g):
     q = '''
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>  
@@ -31,10 +33,25 @@ def create_places_from_nbf(g):
 
         x=x+1
 
+def remove_dublicates(g):
+    q = g.query('''
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        
+        SELECT DISTINCT ?place1 ?place2
+        WHERE { 
+        ?place1 skos:prefLabel ?label .
+  		?place2 skos:prefLabel ?label .
+        FILTER(?place1 != ?place2) .
+        }''')
+
+    for row in q:
+        g.remove((URIRef(row[1]), None, None))
+
 
 graph = Graph()
 
 create_places_from_nbf(graph)
+remove_dublicates(graph)
 
 graph.serialize('relations/paikat.ttl', format='turtle')
 

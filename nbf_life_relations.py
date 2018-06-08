@@ -21,8 +21,9 @@ def death_place_relations(g):
 	PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 	PREFIX gvp:	<http://vocab.getty.edu/ontology#>
 	PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+	PREFIX rel: <http://ldf.fi/relsearch/>
 
-    	SELECT DISTINCT ?nbfperson ?familyName ?firstName ?deathtime ?place ?placeName ?death
+    	SELECT DISTINCT ?nbfperson ?familyName ?firstName ?deathtime ?place ?placeName ?death ?relPlace
     	WHERE { 
         ?nbfperson a nbf:PersonConcept .
         ?nbfperson skosxl:prefLabel ?label .
@@ -34,8 +35,10 @@ def death_place_relations(g):
 	    ?death nbf:place ?place .
         ?dtime gvp:estStart ?deathtime .
 	    ?place skos:prefLabel ?placeName .
+	    ?relPlace a rel:Place .
+	    ?relPlace skos:prefLabel ?placeName .
   	    FILTER (!isLiteral(?place)) .
-  	    FILTER (lang(?placeName) = 'fi')
+  	    FILTER (lang(?placeName) = 'fi') .
         }
         '''
 
@@ -45,18 +48,21 @@ def death_place_relations(g):
 
     x = 1000
     for row in response.json()['results']['bindings']:
-        resource_uri = rel['dprel{}'.format(x)]
-        g.add((resource_uri, namespace.RDF.type, rel.Relation))
-        g.add((resource_uri, rel.personSubject, URIRef(row['nbfperson']['value'])))
-        g.add((resource_uri, rel.placeObject, URIRef(row['place']['value'])))
-        g.add((resource_uri, rel.relationType, rel.deathPlace))
-        g.add((resource_uri, namespace.RDFS.comment, Literal(
-            "Henkilö {0}, {1} on kuollut paikassa {2} päivämääränä {3}.".format(row['familyName']['value'], row['firstName']['value'],
+
+        if row['place']['value'].find("Naimisissa") == -1:
+
+            resource_uri = rel['dprel{}'.format(x)]
+            g.add((resource_uri, namespace.RDF.type, rel.Relation))
+            g.add((resource_uri, rel.personSubject, URIRef(row['nbfperson']['value'])))
+            g.add((resource_uri, rel.placeObject, URIRef(row['relPlace']['value'])))
+            g.add((resource_uri, rel.relationType, rel.deathPlace))
+            g.add((resource_uri, namespace.RDFS.comment, Literal(
+                "Henkilö {0}, {1} on kuollut paikassa {2} päivämääränä {3}.".format(row['familyName']['value'], row['firstName']['value'],
                                                                                       row['placeName']['value'],
                                                                                       row['deathtime']['value']))))
-        g.add((resource_uri, rel.source, URIRef(row['death']['value'])))
-        g.add((resource_uri, rel.date, Literal(row['deathtime']['value'], datatype=XSD.date)))
-        x = x + 1
+            g.add((resource_uri, rel.source, URIRef(row['death']['value'])))
+            g.add((resource_uri, rel.date, Literal(row['deathtime']['value'], datatype=XSD.date)))
+            x = x + 1
 
 def birth_place_relations(g):
     q = '''
@@ -75,8 +81,9 @@ def birth_place_relations(g):
 	PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 	PREFIX gvp:	<http://vocab.getty.edu/ontology#>
 	PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+	PREFIX rel: <http://ldf.fi/relsearch/>
 
-    	SELECT DISTINCT ?nbfperson ?familyName ?firstName ?birthtime ?place ?placeName ?birth
+    	SELECT DISTINCT ?nbfperson ?familyName ?firstName ?birthtime ?place ?placeName ?birth ?relPlace
     	WHERE { 
         ?nbfperson a nbf:PersonConcept .
         ?nbfperson skosxl:prefLabel ?label .
@@ -88,8 +95,10 @@ def birth_place_relations(g):
 	    ?birth nbf:place ?place .
         ?btime gvp:estStart ?birthtime .
 	    ?place skos:prefLabel ?placeName .
+	    ?relPlace a rel:Place .
+	    ?relPlace skos:prefLabel ?placeName .
   	    FILTER (!isLiteral(?place)) .
-  	    FILTER (lang(?placeName) = 'fi')
+  	    FILTER (lang(?placeName) = 'fi') .
         }
         '''
 
@@ -99,18 +108,21 @@ def birth_place_relations(g):
 
     x = 1000
     for row in response.json()['results']['bindings']:
-        resource_uri = rel['bprel{}'.format(x)]
-        g.add((resource_uri, namespace.RDF.type, rel.Relation))
-        g.add((resource_uri, rel.relationType, rel.birthPlace))
-        g.add((resource_uri, rel.personSubject, URIRef(row['nbfperson']['value'])))
-        g.add((resource_uri, rel.placeObject, URIRef(row['place']['value'])))
-        g.add((resource_uri, namespace.RDFS.comment, Literal(
-            "Henkilö {0}, {1} on syntynyt paikassa {2} päivämääränä {3}.".format(row['familyName']['value'], row['firstName']['value'],
+
+        if row['place']['value'].find("Naimisissa") == -1:
+
+            resource_uri = rel['bprel{}'.format(x)]
+            g.add((resource_uri, namespace.RDF.type, rel.Relation))
+            g.add((resource_uri, rel.relationType, rel.birthPlace))
+            g.add((resource_uri, rel.personSubject, URIRef(row['nbfperson']['value'])))
+            g.add((resource_uri, rel.placeObject, URIRef(row['relPlace']['value'])))
+            g.add((resource_uri, namespace.RDFS.comment, Literal(
+                "Henkilö {0}, {1} on syntynyt paikassa {2} päivämääränä {3}.".format(row['familyName']['value'], row['firstName']['value'],
                                                                                       row['placeName']['value'],
                                                                                       row['birthtime']['value']))))
-        g.add((resource_uri, rel.source, URIRef(row['birth']['value'])))
-        g.add((resource_uri, rel.date, Literal(row['birthtime']['value'], datatype=XSD.date)))
-        x = x + 1
+            g.add((resource_uri, rel.source, URIRef(row['birth']['value'])))
+            g.add((resource_uri, rel.date, Literal(row['birthtime']['value'], datatype=XSD.date)))
+            x = x + 1
 
 
 
