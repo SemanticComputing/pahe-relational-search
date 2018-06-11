@@ -26,18 +26,18 @@ def first_level_broader(g):
         g.add((URIRef(row['relPlace']['value']), namespace.SKOS.broader, URIRef(row['broaderPlace']['value'])))
 
 
-def ares_given_to_ussr(g):
+def areas_given_to_ussr(g):
     q = '''
             PREFIX yso: <http://www.yso.fi/onto/yso/>
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
             SELECT DISTINCT ?relPlace ?note
-            WHERE { 
-	        ?place1 a skos:Concept .
-  	        ?place1 skos:inScheme yso:places .
-  		    ?place1 skos:note ?note .
-  		    ?relPlace skos:exactMatch ?place1 .
-  		    FILTER(lang(?note) = 'fi') .
+            WHERE {
+            ?place1 a skos:Concept .
+            ?place1 skos:inScheme yso:places .
+            ?place1 skos:note ?note .
+            ?relPlace skos:exactMatch ?place1 .
+            FILTER(lang(?note) = 'fi') .
             }'''
 
     response = requests.post('http://localhost:3030/ds/query',
@@ -51,28 +51,27 @@ def ares_given_to_ussr(g):
                 "luovutetulle alueelle" in row['note']['value']:
             g.add((URIRef(row['relPlace']['value']), namespace.SKOS.broader, rel.p_luovutetut_alueet))
 
-
-def move_old_towns(g):
+def linkage(g):
     q = '''
-            PREFIX yso: <http://www.yso.fi/onto/yso/>
-            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-
-            SELECT DISTINCT ?relPlace ?note
-            WHERE { 
-	        ?place1 a skos:Concept .
-  	        ?place1 skos:inScheme yso:places .
-  		    ?place1 skos:note ?note .
-  		    ?relPlace skos:exactMatch ?place1 .
-  		    FILTER(lang(?note) = 'fi') .
-            }'''
+        PREFIX yso: <http://www.yso.fi/onto/yso/>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        
+        SELECT DISTINCT ?relPlace ?match
+        WHERE { 
+	    ?place1 a skos:Concept .
+  	    ?place1 skos:inScheme yso:places .
+  		?relPlace skos:exactMatch ?place1 .
+  		?place1 skos:closeMatch ?match .
+        }'''
 
     response = requests.post('http://localhost:3030/ds/query',
                              data={'query': q})
 
     for row in response.json()['results']['bindings']:
-        if row['note']['value'] == "Neuvostoliitolle luovutetun alueen kunta" or \
-                row['note']['value'] == "Neuvostoliitolle luovutetun alueen kaupunki":
-            g.add((URIRef(row['relPlace']['value']), namespace.SKOS.broader, rel.p_luovutetut_alueet))
+        try:
+            g.add((URIRef(row['relPlace']['value']), namespace.SKOS.closeMatch, URIRef(row['match']['value'])))
+        except:
+            pass
 
 
 graph = Graph()
@@ -81,6 +80,8 @@ graph.parse('graphs/no_hierarchy_place_ontology.ttl', format='turtle')
 
 first_level_broader(graph)
 
-ares_given_to_ussr(graph)
+areas_given_to_ussr(graph)
 
-graph.serialize('graphs/place_ontology3.ttl', format='turtle')
+linkage(graph)
+
+graph.serialize('graphs/place_ontology.ttl', format='turtle')
