@@ -32,11 +32,11 @@ def painters(g, person):
 def places(g, place):
     q = g.query("""
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-        PREFIX nbf: <http://ldf.fi/nbf/> 
+        PREFIX rel: <http://ldf.fi/relsearch/>
             
         SELECT DISTINCT ?place ?label
         WHERE {
-            ?place a nbf:Place .
+            ?place a rel:Place .
             ?place skos:prefLabel ?label .
         }""", initBindings={'label': Literal(place, lang='fi')})
     if len(list(q)) > 0:
@@ -72,7 +72,7 @@ def painting_depicts_relations(read_graph, write_graph):
 
 graph = Graph()
 graph.parse('graphs/corrected_kulsa_links.ttl', format='turtle')
-graph.parse('NBF/places.ttl', format='turtle')
+graph.parse('graphs/place_ontology.ttl', format='turtle')
 
 w_graph = Graph()
 

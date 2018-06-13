@@ -15,8 +15,9 @@ def letter_place_relations(g):
     PREFIX snell: <http://ldf.fi/snellman/>
     PREFIX dc: <http://purl.org/dc/elements/1.1/>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rel: <http://ldf.fi/relsearch/>
 
-    SELECT DISTINCT ?letter ?docname ?person ?name ?place ?placename ?source ?date ?nbfPerson ?nbfPlace
+    SELECT DISTINCT ?letter ?docname ?person ?name ?place ?placename ?source ?date ?nbfPerson ?nbfPlace ?relPlace
     WHERE {
     ?person a foaf:Person .
     ?person snell:nbf ?nbfPerson .
@@ -28,6 +29,8 @@ def letter_place_relations(g):
     ?place snell:nbf ?nbfPlace .
     ?letter skos:prefLabel ?docname .
     ?place skos:prefLabel ?placename .
+    ?relPlace a rel:Place .
+    ?relPlace skos:prefLabel ?placename .
     ?letter dc:source ?source .
     ?letter dc:date ?date .
     }
@@ -42,7 +45,7 @@ def letter_place_relations(g):
         g.add((resource_uri, namespace.RDF.type, rel.Relation))
         g.add((resource_uri, rel.relationType, rel.letterSentFrom))
         g.add((resource_uri, rel.personSubject, URIRef(row['nbfPerson']['value'])))
-        g.add((resource_uri, rel.placeObject, URIRef(row['nbfPlace']['value'])))
+        g.add((resource_uri, rel.placeObject, URIRef(row['relPlace']['value'])))
         g.add((resource_uri, namespace.RDFS.comment, Literal(
             "Henkilö {0} on lähettänyt kirjeen paikasta {1} päivämääränä {2}.".format(row['name']['value'],
                                                                                       row['placename']['value'],
@@ -61,8 +64,9 @@ def received_letter_place(g):
     PREFIX snell: <http://ldf.fi/snellman/>
     PREFIX dc: <http://purl.org/dc/elements/1.1/>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rel: <http://ldf.fi/relsearch/>
 
-    SELECT DISTINCT ?letter ?docname ?person ?name ?place ?placename ?source ?date ?nbfPerson ?nbfPlace
+    SELECT DISTINCT ?letter ?docname ?person ?name ?place ?placename ?source ?date ?nbfPerson ?nbfPlace ?relPlace
     WHERE {
     ?person a foaf:Person .
     ?person snell:nbf ?nbfPerson .
@@ -75,6 +79,8 @@ def received_letter_place(g):
     ?place snell:nbf ?nbfPlace .
     ?letter skos:prefLabel ?docname .
     ?place skos:prefLabel ?placename .
+    ?relPlace a rel:Place .
+    ?relPlace skos:prefLabel ?placename .
     ?letter dc:source ?source .
     ?letter dc:date ?date .
     FILTER(?creator = <http://ldf.fi/snellman/1>) 
@@ -89,8 +95,8 @@ def received_letter_place(g):
         resource_uri = rel['received_letter_rel{}'.format(x)]
         g.add((resource_uri, namespace.RDF.type, rel.Relation))
         g.add((resource_uri, rel.relationType, rel.letterReceivedFrom))
-        g.add((resource_uri, rel.personSubject, URIRef(row['person']['value'])))
-        g.add((resource_uri, rel.personObject, URIRef(row['place']['value'])))
+        g.add((resource_uri, rel.personSubject, URIRef(row['nbfPerson']['value'])))
+        g.add((resource_uri, rel.placeObject, URIRef(row['relPlace']['value'])))
         g.add((resource_uri, namespace.RDFS.comment, Literal(
             "Henkilö {0} on vastaanottanut päivämääränä {2} kirjoitetun kirjeen J. V. Snellmanilta paikasta {1}.".format(
                 row['name']['value'],
@@ -109,8 +115,9 @@ def snellman_received_from(g):
     PREFIX snell: <http://ldf.fi/snellman/>
     PREFIX dc: <http://purl.org/dc/elements/1.1/>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rel: <http://ldf.fi/relsearch/>
 
-    SELECT DISTINCT ?letter ?docname ?person ?name ?place ?placename ?source ?date ?nbfPerson ?nbfPlace
+    SELECT DISTINCT ?letter ?docname ?person ?name ?place ?placename ?source ?date ?nbfPerson ?nbfPlace ?relPlace
     WHERE {
     ?person a foaf:Person .
     ?person snell:nbf ?nbfPerson .
@@ -123,6 +130,8 @@ def snellman_received_from(g):
     ?place snell:nbf ?nbfPlace .
     ?letter skos:prefLabel ?docname .
     ?place skos:prefLabel ?placename .
+    ?relPlace a rel:Place .
+    ?relPlace skos:prefLabel ?placename .
     ?letter dc:source ?source .
     ?letter dc:date ?date .
     FILTER(?creator != <http://ldf.fi/snellman/1>)
@@ -137,8 +146,8 @@ def snellman_received_from(g):
         resource_uri = rel['received_letter_snell_rel{}'.format(x)]
         g.add((resource_uri, namespace.RDF.type, rel.Relation))
         g.add((resource_uri, rel.relationType, rel.letterReceivedFrom))
-        g.add((resource_uri, rel.personSubject, URIRef('http://ldf.fi/snellman/1')))
-        g.add((resource_uri, rel.personObject, URIRef(row['place']['value'])))
+        g.add((resource_uri, rel.personSubject, URIRef('http://ldf.fi/nbf/p996')))
+        g.add((resource_uri, rel.placeObject, URIRef(row['relPlace']['value'])))
         g.add((resource_uri, namespace.RDFS.comment, Literal(
             "J. V. Snellman on vastaanottanut päivämääränä {1} kirjoitetun kirjeen paikasta {0}.".format(
                 row['placename']['value'],
@@ -147,6 +156,8 @@ def snellman_received_from(g):
         g.add((resource_uri, rel.date, Literal(row['date']['value'], datatype=XSD.date)))
         x = x + 1
 
+
+# not moved to new place ontology!!!!
 
 def people_in_letter_relations(g):
     q = '''

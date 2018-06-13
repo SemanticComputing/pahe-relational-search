@@ -30,6 +30,8 @@ def career_places(g):
                 ?event nbf:time ?time .
                 ?time gvp:estStart ?date .
                 FILTER(lang(?placeName) = 'fi') .
+                FILTER(lang(?familyName) = 'fi') .
+                FILTER(lang(?firstName) = 'fi') .
             }
             """
     x=1000
@@ -82,6 +84,8 @@ def honours(g):
                 ?event nbf:time ?time .
                 ?time gvp:estStart ?date .
                 FILTER(lang(?placeName) = 'fi') .
+                FILTER(lang(?familyName) = 'fi') .
+                FILTER(lang(?firstName) = 'fi') .
             }
             """
     x=1000
