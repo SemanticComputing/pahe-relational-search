@@ -11,6 +11,7 @@ def career_places(g):
             PREFIX foaf: <http://xmlns.com/foaf/0.1/>
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
             PREFIX gvp:	<http://vocab.getty.edu/ontology#>
+            PREFIX rel: <http://ldf.fi/relsearch/>
 
             SELECT DISTINCT ?person ?place ?placeName ?eventLabel ?familyName ?firstName ?place ?date ?event
             WHERE {
@@ -21,7 +22,9 @@ def career_places(g):
                 ?person foaf:focus ?actor .
                 ?event bioc:inheres_in ?actor .
                 ?event skos:prefLabel ?eventLabel .
-                ?event nbf:place ?place .
+                ?event nbf:place ?nbfPlace .
+                ?nbfPlace skos:prefLabel ?placeName .
+                ?place a rel:Place .
                 ?place skos:prefLabel ?placeName .
                 ?event a nbf:Career .
                 ?event nbf:time ?time .
@@ -54,6 +57,7 @@ def career_places(g):
 def honours(g):
     q = """
             PREFIX nbf:	<http://ldf.fi/nbf/>
+            PREFIX rel: <http://ldf.fi/relsearch/>
             PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
             PREFIX bioc: <http://ldf.fi/schema/bioc/>
             PREFIX schema: <http://schema.org/>
@@ -70,7 +74,9 @@ def honours(g):
                 ?person foaf:focus ?actor .
                 ?event bioc:inheres_in ?actor .
                 ?event skos:prefLabel ?eventLabel .
-                ?event nbf:place ?place .
+                ?event nbf:place ?nbfPlace .
+                ?nbfPlace skos:prefLabel ?placeName .
+                ?place a rel:Place .
                 ?place skos:prefLabel ?placeName .
                 ?event a nbf:Honour .
                 ?event nbf:time ?time .
