@@ -10,11 +10,26 @@ def schema(g):
     g.add((rel.relation, namespace.RDF.type, namespace.RDFS.Class))
     g.add((rel.relation, namespace.SKOS.prefLabel, Literal('Yhteys kahden asian välillä', lang='fi')))
 
+    g.add((rel.relationEndPoint, namespace.RDF.type, namespace.RDF.Property))
+    g.add((rel.relationEndPoint, namespace.SKOS.prefLabel, Literal('Semanttisen yhteyden alku- tai päätepiste', lang='fi')))
+
+    g.add((rel.relationSubject, namespace.RDF.type, namespace.RDF.Property))
+    g.add((rel.relationSubject, namespace.RDFS.subPropertyOf, rel.relationEndPoint))
+    g.add((rel.relationSubject, namespace.SKOS.prefLabel,
+           Literal('Semanttisen yhteyden alkupiste', lang='fi')))
+
+    g.add((rel.relationObject, namespace.RDF.type, namespace.RDF.Property))
+    g.add((rel.relationObject, namespace.RDFS.subPropertyOf, rel.relationEndPoint))
+    g.add((rel.relationObject, namespace.SKOS.prefLabel,
+           Literal('Semanttisen yhteyden päätepiste', lang='fi')))
+
     g.add((rel.personSubject, namespace.RDF.type, namespace.RDF.Property))
-    g.add((rel.personSubject, namespace.SKOS.prefLabel, Literal('Yhdistettävä henkilö', lang='fi')))
+    g.add((rel.personSubject, namespace.SKOS.prefLabel, Literal('Yhteyden henkilösubjekti', lang='fi')))
+    g.add((rel.personSubject, namespace.RDFS.subPropertyOf, rel.relationSubject))
 
     g.add((rel.placeObject, namespace.RDF.type, namespace.RDF.Property))
-    g.add((rel.placeObject, namespace.SKOS.prefLabel, Literal('Yhdistettävä paikka', lang='fi')))
+    g.add((rel.placeObject, namespace.SKOS.prefLabel, Literal('Yhteyden paikkaobjekti', lang='fi')))
+    g.add((rel.placeObject, namespace.RDFS.subPropertyOf, rel.relationObject))
 
     g.add((rel.relationType, namespace.RDF.type, namespace.RDF.Property))
     g.add((rel.relationType, namespace.SKOS.prefLabel, Literal('Yhteyden tyyppi', lang='fi')))
@@ -81,7 +96,7 @@ def schema(g):
 
     # career and honours
 
-    g.add(((rel.careerRelation, namespace.RDF.type, rel.RelationType)))
+    g.add((rel.careerRelation, namespace.RDF.type, rel.RelationType))
     g.add((rel.careerRelation, namespace.SKOS.prefLabel, Literal('Ura, opiskelu ja kunnianosoitukset')))
 
     g.add((rel.careerAtPlace, namespace.RDF.type, rel.RelationType))
@@ -103,6 +118,9 @@ def compile_ttl(graph):
     graph.parse('relations/nbf_life_relations.ttl', format='turtle')
     graph.parse('relations/snellman_relations.ttl', format='turtle')
     graph.parse('relations/kirjasampo_books_depict_place.ttl', format='turtle')
+    graph.parse('relations/fng_depicts_place.ttl', format='turtle')
+
+    graph.parse('graphs/place_ontology.ttl', format='turtle')
 
     graph.serialize('relations/pahe_relations.ttl', format='turtle')
 
@@ -113,4 +131,4 @@ graph.bind('skos', namespace.SKOS)
 
 schema(graph)
 
-
+compile_ttl(graph)
