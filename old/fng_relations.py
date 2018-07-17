@@ -31,7 +31,7 @@ def get_subject(elem, list):
             index = utilities.find_index(subject, list[0])
             if index != -1:
                 subject_uri = list[1][index]
-                print('     ' + subject_uri)
+                print('     ' + subject_uri)  # For testing?
 
 
 def get_date(elem):
