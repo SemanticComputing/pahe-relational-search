@@ -17,6 +17,7 @@ def letter_place_relations(g):
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX rel: <http://ldf.fi/relsearch/>
 
+
     SELECT DISTINCT ?letter ?docname ?person ?name ?place ?placename ?source ?date ?nbfPerson ?nbfPlace ?relPlace
     WHERE {
     ?person a foaf:Person .

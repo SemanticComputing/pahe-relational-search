@@ -6,3 +6,4 @@ csv
 relations
 command_order.txt
 __pycache__/
+constructed/

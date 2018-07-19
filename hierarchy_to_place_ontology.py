@@ -8,6 +8,7 @@ def first_level_broader(g):
         PREFIX yso: <http://www.yso.fi/onto/yso/>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
         PREFIX rel: <http://ldf.fi/relsearch/>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
         SELECT DISTINCT ?relPlace ?broaderPlace
         WHERE { 
@@ -30,6 +31,7 @@ def areas_given_to_ussr(g):
     q = '''
             PREFIX yso: <http://www.yso.fi/onto/yso/>
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
             SELECT DISTINCT ?relPlace ?note
             WHERE {
@@ -55,13 +57,18 @@ def linkage(g):
     q = '''
         PREFIX yso: <http://www.yso.fi/onto/yso/>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX nbf:	<http://ldf.fi/nbf/>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
         
-        SELECT DISTINCT ?relPlace ?match
+        SELECT DISTINCT ?relPlace ?match ?nbf_place
         WHERE { 
 	    ?place1 a skos:Concept .
   	    ?place1 skos:inScheme yso:places .
   		?relPlace skos:exactMatch ?place1 .
   		?place1 skos:closeMatch ?match .
+  		?place1 skos:prefLabel ?label .
+  		?nbf_place a nbf:Place .
+  	    ?nbf_place skos:prefLabel ?label .
         }'''
 
     response = requests.post('http://localhost:3030/ds/query',
@@ -70,6 +77,10 @@ def linkage(g):
     for row in response.json()['results']['bindings']:
         try:
             g.add((URIRef(row['relPlace']['value']), namespace.SKOS.closeMatch, URIRef(row['match']['value'])))
+        except:
+            pass
+        try:
+            g.add((URIRef(row['relPlace']['value']), namespace.SKOS.exactMatch, URIRef(row['nbf_place']['value'])))
         except:
             pass
 
