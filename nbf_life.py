@@ -103,7 +103,7 @@ def event_places():
         ?personLabel schema:familyName ?familyName .
         ?personLabel schema:givenName ?givenName .
   
-        BIND(uri(encode_for_uri(concat(str(?personName), str(?placeLabel), str(?eClassLabel), str(?eventLabel)))) as ?uri) .
+        BIND(uri(encode_for_uri(concat(str(?personName), str(?placeLabel), str(?eClassLabel), str(?event)))) as ?uri) .
   
         BIND(concat("Henkilön ", str(?givenName), " ", str(?familyName), " elämään liittyy paikassa ", str(?placeLabel), " ", lcase(?eClassName), "-tyyppinen tapahtuma: ", str(?eventLabel)) as ?description)
     }
