@@ -86,7 +86,7 @@ def event_places():
   	    ?event ?any ?place .
   	
   	    ?rel_place a rel:Place .
-  	    ?rel_place skos:exactMatch ?place .
+        ?rel_place skos:closeMatch ?place .
   	    ?rel_place skos:prefLabel ?placeLabel .
   
 	    OPTIONAL {
@@ -105,7 +105,7 @@ def event_places():
   
         BIND(uri(encode_for_uri(concat(str(?personName), str(?placeLabel), str(?eClassLabel), str(?event)))) as ?uri) .
   
-        BIND(concat("Henkilön ", str(?givenName), " ", str(?familyName), " elämään liittyy paikassa ", str(?placeLabel), " ", lcase(?eClassName), "-tyyppinen tapahtuma: ", str(?eventLabel)) as ?description)
+        BIND(concat("Henkilön ", str(?givenName), " ", str(?familyName), " elämään liittyy paikassa ", str(?placeLabel), " ", "tapahtuma tyyppiä '", lcase(?eClassName), "': ", str(?eventLabel)) as ?description)
     }
     '''
 

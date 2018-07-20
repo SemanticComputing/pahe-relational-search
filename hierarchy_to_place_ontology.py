@@ -80,7 +80,7 @@ def linkage(g):
         except:
             pass
         try:
-            g.add((URIRef(row['relPlace']['value']), namespace.SKOS.exactMatch, URIRef(row['nbf_place']['value'])))
+            g.add((URIRef(row['relPlace']['value']), namespace.SKOS.closeMatch, URIRef(row['nbf_place']['value'])))
         except:
             pass
 
