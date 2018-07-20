@@ -1,0 +1,37 @@
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX relse: <http://ldf.fi/relsearch/>
+BASE <http://ldf.fi/relsearch/>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+
+CONSTRUCT {
+  ?uri a relse:Relation ;
+    relse:personSubject ?person ;
+    relse:placeObject ?place ;
+    skos:prefLabel ?description ;
+    relse:relationType relse:novelDepictsPlace ;
+    relse:source ?source ;
+    relse:date ?date .
+    
+}
+WHERE {
+  ?relation a relse:Relation .
+  ?relation relse:source ?source .
+  ?relation relse:personSubject ?subject .
+  ?relation relse:placeObject ?object .
+  ?person a nbf:PersonConcept .
+  ?person nbf:kirjasampo ?subject .
+  ?place a relse:Place .
+  ?place skos:prefLabel ?placeName .
+  ?relation relse:placeName ?placeName .
+  ?relation relse:date ?date .
+  
+  ?person skosxl:prefLabel ?personLabel .
+  ?personLabel schema:familyName ?familyName .
+  ?personLabel schema:givenName ?givenName .
+  
+  BIND(uri(encode_for_uri(concat(str(?person), str(?place), str(?source), "novel_depicts"))) as ?uri) .
+  BIND(concat(str(?givenName), " ", str(?familyName), " on kirjoittanut romaanin joka kuvaa paikkaa ", str(?placeName), ".") as ?description) .
+}

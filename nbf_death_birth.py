@@ -52,7 +52,7 @@ def death_places():
 
       		BIND(uri(encode_for_uri(concat(str(?person), str(?rel_place), "death_place", str(?death)))) as ?uri) .
 
-      BIND(concat(str(?givenName), " ", str(?familyName), " on kuollut paikkassa ", str(?placeName), ".") as ?description) .
+            BIND(concat(str(?givenName), " ", str(?familyName), " on kuollut paikkassa ", str(?placeName), ".") as ?description) .
 
         }'''
 
