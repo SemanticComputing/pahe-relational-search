@@ -3,8 +3,9 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX nbf:	<http://ldf.fi/nbf/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX relse: <http://ldf.fi/relsearch/>
-BASE <http://ldf.fi/relsearch/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+BASE <http://ldf.fi/relsearch/>
 
 CONSTRUCT {
   ?uri a relse:Relation ;
@@ -26,7 +27,8 @@ WHERE {
   ?place a relse:Place .
   ?place skos:prefLabel ?placeName .
   ?relation relse:placeName ?placeName .
-  ?relation relse:date ?date .
+  ?relation relse:date ?dateRaw .
+  BIND (xsd:date(?dateRaw) as ?date ) .
   
   ?person skosxl:prefLabel ?personLabel .
   ?personLabel schema:familyName ?familyName .

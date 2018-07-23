@@ -1,3 +1,4 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -5,10 +6,11 @@ PREFIX kaunokki: <http://www.yso.fi/onto/kaunokki#>
 PREFIX saha: <http://seco.tkk.fi/saha3/>
 PREFIX btj: <http://www.btj.fi/>
 PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX yso: <http://www.yso.fi/onto/yso/>
 
 CONSTRUCT {
   [ a relse:Relation ;
-      relse:date ?year ;
+      relse:date ?date ;
       relse:relationType relse:novelDepictsPlace ;
       relse:personSubject ?writer ;
       relse:placeObject ?place ;
@@ -17,18 +19,23 @@ CONSTRUCT {
       relse:objectName ?workName ]
 }
 WHERE {
-  ?work a <http://www.yso.fi/onto/kaunokki#romaani> .
-  ?work <http://www.yso.fi/onto/kaunokki#worldPlace> ?place .
-  ?work <http://www.yso.fi/onto/kaunokki#tekija> ?writer .
-  ?work skos:prefLabel ?workName .
-  ?work <http://www.yso.fi/onto/kaunokki#manifests_in> ?version .
-  ?version <http://www.yso.fi/onto/kaunokki#onEnsimmainenVersio> <http://www.yso.fi/onto/kaunokki#true> .
-  ?version <http://www.yso.fi/onto/kaunokki#ilmestymisvuosi> ?date .
-  ?date <http://www.yso.fi/onto/time-schema#earliestStart> ?dateStart .
-  ?date skos:prefLabel ?dateLabel .
-  BIND(str(?dateLabel) AS ?year) .
-  ?writer skos:prefLabel ?writerName .
-  ?place skos:prefLabel ?placeName .
+  VALUES ?novel_class { <http://www.yso.fi/onto/kaunokki#romaani> <http://www.yso.fi/onto/kito/k351> }
+  ?work a ?novel_class .
+  ?work <http://www.yso.fi/onto/kaunokki#worldPlace> ?place . # Not general
+  ?work <http://www.yso.fi/onto/kaunokki#tekija> ?writer . # Not general
+  ?work skos:prefLabel|rdfs:label ?workName .
+  
+    # Complicated way to get date that is unlikely to be general
+  OPTIONAL {
+  	?work <http://www.yso.fi/onto/kaunokki#manifests_in> ?version .
+  	?version <http://www.yso.fi/onto/kaunokki#onEnsimmainenVersio> <http://www.yso.fi/onto/kaunokki#true> .
+  	?version <http://www.yso.fi/onto/kaunokki#ilmestymisvuosi> ?pubYear .
+  	?pubYear <http://www.yso.fi/onto/time-schema#earliestStart> ?startDate .
+    	BIND(xsd:dateTime(?startDate) as ?date) .   #gives date time, maybe should be date?
+  }
+  
+  ?writer skos:prefLabel|rdfs:label ?writerName .
+  ?place skos:prefLabel|rdfs:label ?placeName .
   FILTER(lang(?placeName) = 'fi') .
   FILTER(lang(?workName) = 'fi') .
 }
