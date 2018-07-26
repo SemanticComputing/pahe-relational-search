@@ -1,0 +1,45 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+    
+CONSTRUCT {
+  ?uri a relse:Relation ;
+    relse:relationtype ?type ;
+    relse:source ?source ;
+    relse:date ?date ;
+  	relse:personSubject ?person ;
+    relse:placeObject ?place ;
+    skos:prefLabel ?description ;
+}
+WHERE {
+  ?relation a relse:Relation .
+  ?relation relse:personSubject ?subject .
+  
+  ?relation relse:placeObject ?object .
+  ?place skos:closeMatch ?object .
+  ?place skos:prefLabel ?placeName .
+  
+  ?relation relse:date ?date .
+  BIND(year(xsd:date(?date)) AS ?year)
+
+  ?relation relse:source ?source .
+  ?relation relse:relationType ?type .
+  ?relation relse:entityName ?name .
+
+  
+  ?person skos:exactMatch ?subject .
+  ?person skosxl:prefLabel ?personLabel .
+  ?personLabel schema:familyName ?familyName .
+  ?personLabel schema:givenName ?givenName .
+  
+  
+  BIND (URI(ENCODE_FOR_URI(CONCAT(?givenName, ?familyName, ?placeName, str(?source), "event_took_place_at"))) AS ?uri) .
+  
+  BIND (CONCAT(?givenName, " ", ?familyName, " otti osaa vuonna ", str(?year), " alkaneeseen historialliseen tapahtumaan '", ?name, "', joka liittyy paikkaan ", ?placeName, ".") AS ?description) .
+  
+}

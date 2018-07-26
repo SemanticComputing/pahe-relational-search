@@ -1,12 +1,27 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
-PREFIX yso: <http://www.yso.fi/onto/yso/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX schema: <http://schema.org/>
 PREFIX relse: <http://ldf.fi/relsearch/>
-
-SELECT ?event ?participant
+    
+CONSTRUCT {
+  [ a relse:Relation ;
+      relse:date ?date ;
+      relse:personSubject ?participant ;
+      relse:placeObject ?place ;
+      relse:entityName ?eLabel ;
+      relse:relationType relse:eventTookPlaceAt ;
+      relse:source ?event ;
+  ] 
+}
 WHERE {
   ?event a crm:E5_Event .
+  ?event crm:P7_took_place_at ?place .
   ?event crm:P11_had_participant ?participant .
+  ?event rdfs:label ?eLabel .
+  FILTER (lang(?eLabel) = 'fi') .
+  ?event crm:P4_has_time-span ?time .
+  ?time crm:P82a_start_of_the_beginning ?startDate .
+  BIND(xsd:dateTime(?startDate) as ?date) . # Maybe should be date, instead of datetime
 }
-LIMIT 10

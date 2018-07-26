@@ -1,0 +1,22 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX relse: <http://ldf.fi/relsearch/>
+    
+CONSTRUCT {
+  ?relPlace skos:closeMatch ?place .
+}
+WHERE {
+  ?relPlace a relse:Place .
+  ?relPlace skos:prefLabel ?label .
+  FILTER (str(?label) = str(?strippedLabel)) .
+  SERVICE <http://ldf.fi/history/sparql> {
+    ?event a crm:E5_Event .
+    ?event crm:P7_took_place_at ?place .
+    ?place rdfs:label ?pLabel .
+    FILTER (lang(?pLabel) = 'fi') .
+    BIND(STRBEFORE(?pLabel, "(") AS ?strippedLabel)
+  }
+}

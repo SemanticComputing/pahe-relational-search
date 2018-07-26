@@ -36,3 +36,24 @@ def fennica_works():
     w_file = open("constructed/fennica_work_places.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
 
+# Historia
+
+def history_event_places_raw():
+    query_file = open("queries/histo_events_places.sparql", "r")
+    w_file = open("constructed/raw/histo_places_raw .ttl", "w")
+    execute_query("http://ldf.fi/history/sparql", w_file, query_file.read())
+
+def histo_linking():
+    query_file = open("queries/histo_place_linking.sparql", "r")
+    w_file = open("graphs/histo_place_links_1.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
+def histo_linking2():
+    query_file = open("queries/histo_place_linking2.sparql", "r")
+    w_file = open("graphs/histo_place_links_2.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
+def construct_history_event_places():
+    query_file = open("queries/histo_even_places_construct.sparql", "r")
+    w_file = open("constructed/history_event_places.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())

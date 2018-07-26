@@ -1,0 +1,27 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+    
+CONSTRUCT {
+  ?person skos:exactMatch ?participant .
+}
+WHERE {
+  ?person a nbf:PersonConcept .
+  ?person skos:prefLabel ?nbfName .
+  FILTER (?nbfName = ?name) .
+  
+  SERVICE <http://ldf.fi/history/sparql> {
+    ?event a crm:E5_Event .
+    ?event crm:P11_had_participant ?participant .
+    ?participant rdfs:label ?label .
+    FILTER (lang(?label) = 'fi') .
+    BIND (REPLACE(?label, "kirjailija ", "") AS ?label2) .
+    BIND (REPLACE(?label2, "tasavallan presidentti ", "") AS ?label3 ) .
+    BIND (REPLACE(?label2, "pääministeri ", "") AS ?name ) .
+  }
+}
