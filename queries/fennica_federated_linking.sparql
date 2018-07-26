@@ -1,0 +1,33 @@
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX gvp:	<http://vocab.getty.edu/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+  ?nbfperson skos:exactMatch ?person .
+}
+WHERE {
+  ?nbfperson a nbf:PersonConcept .
+  ?nbfperson skosxl:prefLabel ?label .
+  ?label schema:familyName ?nbfFamilyName .
+  ?label schema:givenName ?nbfGivenName . 
+  FILTER (str(?nbfFamilyName) = str(?familyName)) .
+  FILTER (str(?nbfFamilyName) = str(?familyName)) .
+  ?nbfperson foaf:focus ?actor .
+  ?birth crm:P98_brought_into_life ?actor .
+  ?birth nbf:time ?btime .
+  ?btime gvp:estStart ?birthtime .
+  BIND(year(xsd:date(?birthtime)) as ?birthyear) .
+  FILTER (str(?birthyear) = str(?bdate)) .
+	SERVICE <http://data.nationallibrary.fi/bib/sparql> {
+    	?person a schema:Person .
+  		?person schema:birthDate ?bdate .
+  		?person schema:name ?name .
+  		BIND (STRBEFORE(?name, ",") AS ?familyName) .
+  		BIND (STRAFTER(?name, ",") AS ?givenName) .
+	}
+}

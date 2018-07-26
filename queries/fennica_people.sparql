@@ -1,0 +1,10 @@
+PREFIX schema: <http://schema.org/>
+
+SELECT ?person ?bdate ?name ?familyName ?givenName
+WHERE {
+  ?person a schema:Person .
+  ?person schema:birthDate ?bdate .
+  ?person schema:name ?name .
+  BIND (STRBEFORE(?name, ",") AS ?familyName) .
+  BIND (STRAFTER(?name, ",") AS ?givenName) .
+}

@@ -7,6 +7,8 @@ def execute_query(store, write_file, query):
     write_file.write(response.text)
 
 
+# kirjasampo Novels depict places
+
 def raw_kirjasampo():
     query_file = open("queries/kirjasampo_novel_places.sparql", "r")
     w_file = open("constructed/raw/kirjasampo_novel_places_raw.ttl", "w")
@@ -15,9 +17,22 @@ def raw_kirjasampo():
 
 # Needs (on localhost server) place ontology, people from nbf, linkage file, raw relations file
 
-# NOTE: 
-
 def kirjasampo():
     query_file = open("queries/kirjasampo_n_places_construct.sparql", "r")
     w_file = open("constructed/kirjasampo_novel_places.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
+
+# Fennica places
+
+def raw_fennica_subject_places():
+    query_file = open("queries/fennica_work_depicts_place.sparql", "r")
+    w_file = open("constructed/raw/fennica_work_places_raw.ttl", "w")
+    execute_query("http://data.nationallibrary.fi/bib/sparql", w_file, query_file.read())
+
+# needs people; fennica_links; place_ontology; raw_fennica
+def fennica_works():
+    query_file = open("queries/fennica_works.sparql", "r")
+    w_file = open("constructed/fennica_work_places.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+

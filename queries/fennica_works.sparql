@@ -12,7 +12,7 @@ CONSTRUCT {
     relse:personSubject ?person ;
     relse:placeObject ?place ;
     skos:prefLabel ?description ;
-    relse:relationType relse:novelDepictsPlace ;
+    relse:relationType relse:literaryWorkDepictsPlace ;
     relse:source ?source ;
     relse:date ?date .
     
@@ -22,18 +22,15 @@ WHERE {
   ?relation relse:source ?source .
   ?relation relse:personSubject ?subject .
   ?relation relse:placeObject ?object .
-  ?person a nbf:PersonConcept .
-  ?person nbf:kirjasampo ?subject .  # Not general
-  ?place a relse:Place .
+  ?relation relse:entityName ?workName .
+  ?person skos:exactMatch ?subject .
+  ?place skos:exactMatch ?object .
   ?place skos:prefLabel ?placeName .
-  ?relation relse:placeName ?placeName .
-  ?relation relse:date ?dateRaw .
-  BIND (xsd:date(?dateRaw) as ?date ) .
   
   ?person skosxl:prefLabel ?personLabel .
   ?personLabel schema:familyName ?familyName .
   ?personLabel schema:givenName ?givenName .
   
-  BIND(uri(encode_for_uri(concat(str(?person), str(?place), str(?source), "novel_depicts"))) as ?uri) .
-  BIND(concat(str(?givenName), " ", str(?familyName), " on kirjoittanut romaanin joka kuvaa paikkaa ", str(?placeName), ".") as ?description) .
+  BIND(uri(encode_for_uri(concat(str(?person), str(?place), str(?source), str(?workName), "work_depicts"))) as ?uri) .
+  BIND(concat(str(?givenName), " ", str(?familyName), " on kirjoittanut teoksen '", str(?workName), "' joka kuvaa paikkaa ", str(?placeName), ".") as ?description) .
 }

@@ -13,6 +13,7 @@ def binary_search(values, target):
             low = mid + 1
     return -1
 
+# returns the index before the first?
 def find_index(name, list):
     index = binary_search(list, name)
     if index < 0:

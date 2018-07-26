@@ -1,0 +1,12 @@
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX yso: <http://www.yso.fi/onto/yso/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX relse: <http://ldf.fi/relsearch/>
+
+SELECT ?event ?participant
+WHERE {
+  ?event a crm:E5_Event .
+  ?event crm:P11_had_participant ?participant .
+}
+LIMIT 10

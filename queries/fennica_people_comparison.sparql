@@ -1,0 +1,15 @@
+PREFIX schema: <http://schema.org/>
+    
+SELECT ?person ?bdate ?name ?familyName ?givenName ?comparison
+WHERE {
+  ?person a schema:Person .
+  ?person schema:birthDate ?bdate .
+  ?person schema:name ?name .
+  BIND (STRBEFORE(?name, ",") AS ?familyName) .
+  FILTER (?familyName != "") .
+  BIND (STRAFTER(?name, ",") AS ?givenName) .
+  BIND ((CONCAT(?givenName, ?familyName, str(?bdate))) AS ?concatted)
+  BIND (replace(?concatted, " ", "") as ?spaces_removed)
+  BIND (replace(?spaces_removed, '"', "") as ?comparison)
+}
+ORDER BY ?comparison

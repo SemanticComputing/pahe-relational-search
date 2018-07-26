@@ -1,0 +1,27 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+PREFIX schema: <http://schema.org/>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX gvp:	<http://vocab.getty.edu/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?nbfperson ?familyName ?firstName ?birthyear ?nbfComparison
+WHERE { 
+  ?nbfperson a nbf:PersonConcept .
+  ?nbfperson skosxl:prefLabel ?label .
+  ?nbfperson schema:relatedLink ?link .
+  ?label schema:familyName ?familyName .
+  ?label schema:givenName ?firstName .        
+  ?nbfperson foaf:focus ?actor .
+  ?birth crm:P98_brought_into_life ?actor .
+  ?birth nbf:time ?btime .
+  ?btime gvp:estStart ?birthtime .
+  BIND(year(xsd:date(?birthtime)) as ?birthyear) .
+  BIND (concat(?firstName, ?familyName, str(?birthyear)) as ?concattedNBF) .
+  BIND (replace(?concattedNBF, " ", "") as ?nbfComparison) .
+}
+ORDER BY ?nbfComparison
