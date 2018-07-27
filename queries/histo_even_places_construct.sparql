@@ -9,10 +9,10 @@ PREFIX nbf:	<http://ldf.fi/nbf/>
     
 CONSTRUCT {
   ?uri a relse:Relation ;
-    relse:relationtype ?type ;
+    relse:relationType ?type ;
     relse:source ?source ;
     relse:date ?date ;
-  	relse:personSubject ?person ;
+    relse:personSubject ?person ;
     relse:placeObject ?place ;
     skos:prefLabel ?description ;
 }
