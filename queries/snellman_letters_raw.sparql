@@ -1,0 +1,25 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX snellman: <http://ldf.fi/snellman/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+    
+CONSTRUCT {
+  [ a relse:Relation ;
+    relse:personSubject ?writer ;
+    relse:placeObject ?place ;
+    relse:date ?date ;
+    relse:relationType relse:letterSentFrom ;
+    relse:source ?document ;
+    relse:sourceLink ?source ;
+    relse:sourceName "Kirje J. V. Snellmanin kirjeenvaihdossa" ;
+  ]
+}
+WHERE
+{
+  ?document a snellman:Document .
+  ?document snellman:relatedCorrespondence ?correspondence .
+  ?document dc:creator ?writer .
+  ?document snellman:writtenIn ?place .
+  ?document dc:date ?date .
+  ?document dc:source ?source . 
+}

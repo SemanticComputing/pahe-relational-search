@@ -40,7 +40,7 @@ def fennica_works():
 
 def history_event_places_raw():
     query_file = open("queries/histo_events_places.sparql", "r")
-    w_file = open("constructed/raw/histo_places_raw .ttl", "w")
+    w_file = open("constructed/raw/histo_places_raw.ttl", "w")
     execute_query("http://ldf.fi/history/sparql", w_file, query_file.read())
 
 def histo_linking():
@@ -56,4 +56,16 @@ def histo_linking2():
 def construct_history_event_places():
     query_file = open("queries/histo_even_places_construct.sparql", "r")
     w_file = open("constructed/history_event_places.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
+# Snellman
+
+def snellman_letters_raw():
+    query_file = open("queries/snellman_letters_raw.sparql", "r")
+    w_file = open("constructed/raw/snellman_letters_raw.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
+def snellman_letters_construct():
+    query_file = open("queries/snellman_letters_construct.sparql", "r")
+    w_file = open("constructed/snellman_letter_places.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
