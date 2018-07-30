@@ -65,7 +65,17 @@ def snellman_letters_raw():
     w_file = open("constructed/raw/snellman_letters_raw.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
 
+def snellman_received_raw():
+    query_file = open("queries/snellman_received_raw.sparql", "r")
+    w_file = open("constructed/raw/snellman_received_raw.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
 def snellman_letters_construct():
     query_file = open("queries/snellman_letters_construct.sparql", "r")
     w_file = open("constructed/snellman_letter_places.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
+def snellman_received_construct():
+    query_file = open("queries/snellman_received_construct.sparql", "r")
+    w_file = open("constructed/snellman_received_places.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())

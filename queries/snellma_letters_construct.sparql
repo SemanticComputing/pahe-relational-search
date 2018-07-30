@@ -1,0 +1,47 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX snellman: <http://ldf.fi/snellman/>
+BASE <http://ldf.fi/relsearch/>
+    
+CONSTRUCT {
+  ?uri a relse:Relation ;
+  relse:relationType ?type ;
+  relse:source ?source ;
+  relse:sourceLink ?sourceLink ;
+  relse:date ?date ;
+  relse:personSubject ?person ;
+  relse:placeObject ?place ;
+  skos:prefLabel ?description ;
+}
+WHERE {
+  
+  ?relation a relse:Relation .
+  ?relation relse:personSubject ?subject .
+  
+  ?relation relse:placeObject ?object .
+  ?object snellman:yso ?yso_place .
+  ?place skos:exactMatch ?yso_place .
+  ?place skos:prefLabel ?placeName .
+  
+  ?relation relse:date ?date .
+  BIND(year(xsd:date(?date)) AS ?year)
+
+  ?relation relse:source ?source .
+  ?relation relse:sourceLink ?sourceLink .
+  ?relation relse:relationType ?type .
+  
+  ?subject snellman:nbf ?person .
+  ?person skosxl:prefLabel ?personLabel .
+  ?personLabel schema:familyName ?familyName .
+  ?personLabel schema:givenName ?givenName .
+
+    BIND (URI(ENCODE_FOR_URI(CONCAT(?givenName, ?familyName, ?placeName, str(?source), "letter_written_at"))) AS ?uri) .
+  
+  BIND (CONCAT(?givenName, " ", ?familyName, " lähetti vuonna ", str(?year), " kirjeen paikasta ", ?placeName, ".") AS ?description) .
+}
