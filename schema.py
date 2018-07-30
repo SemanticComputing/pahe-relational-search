@@ -103,7 +103,7 @@ def schema(g):
     g.add((rel.eventRelation, namespace.SKOS.prefLabel, Literal('Tapahtumaan liittyvä yhteys', lang='fi')))
 
     g.add((rel.eventTookPlaceAt, namespace.RDF.type, rel.RelationType))
-    g.add((rel.eventTookPlaceAt, namespace.SKOS.prefLabel, Literal('A liittyy historialliseen tapahtumaan, joka liittyy paikkaanB', lang='fi')))
+    g.add((rel.eventTookPlaceAt, namespace.SKOS.prefLabel, Literal('A liittyy historialliseen tapahtumaan paikassa B', lang='fi')))
     g.add((rel.eventTookPlaceAt, namespace.SKOS.broader, rel.eventRelation))
 
     g.add((rel.minorEvent, namespace.RDF.type, rel.RelationType))

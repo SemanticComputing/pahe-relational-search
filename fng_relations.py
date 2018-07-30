@@ -6,6 +6,23 @@ from rdflib import Graph, Literal, namespace, Namespace, XSD, URIRef
 rel = Namespace('http://ldf.fi/relsearch/')
 
 
+def binary_search(values, target):
+    low = 0
+    high = len(values) - 1
+    while low <= high:
+        mid = (high + low) // 2
+        if values[mid].replace('"', '').strip() == target:
+            return mid
+        elif target < values[mid].replace('"','').strip():
+            high = mid - 1
+        else:
+            low = mid + 1
+    return -1
+
+def find_index(name, list):
+    index = binary_search(list, name)
+    return index
+
 
 def get_title(elem):
         for title in elem['title']:
@@ -56,7 +73,7 @@ def add_place_relations(g, elem, places, artists, x):
         for row in elem['subject']:
             if 'keyword' in row:
                 subject = row['keyword']
-                index = utilities.find_index(subject, places[0])
+                index = find_index(subject, places[0])
                 if index != -1 and subject != 'Johannes':   # There is a place called Johannes
                     place_uri = places[1][index]
                     add_painting_depicts_place(g, elem, artists, x, place_uri, subject)
@@ -80,7 +97,7 @@ def add_painting_depicts_place(g, elem, artists, x, place_uri, place_name):
     g.add((resource_uri, rel.sourceLink, URIRef(get_uri(elem))))
     g.add((resource_uri, rel.source, URIRef(get_uri(elem))))
     g.add((resource_uri, rel.personSubject, URIRef(artist[1])))
-    g.add((resource_uri, rel.placeObject, URIRef(place_uri)))
+    g.add((resource_uri, rel.placeObject, URIRef(place_uri.replace('"','').strip())))
     g.add((resource_uri, rel.relationType, rel.paintingDepictsPlace))
     g.add((resource_uri, rel.sourceName, Literal("Kansallisgalleria", lang='fi')))
     if get_date(elem).isdigit():
@@ -115,6 +132,5 @@ def parse():
 
 
     graph.serialize('constructed/fng_depicts_place.ttl', format='turtle')
-
 
 parse()

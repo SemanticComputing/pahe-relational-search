@@ -79,3 +79,10 @@ def snellman_received_construct():
     query_file = open("queries/snellman_received_construct.sparql", "r")
     w_file = open("constructed/snellman_received_places.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
+# nbf-events
+
+def nbf_event_places_construct():
+    query_file = open("queries/nbf_events_construct.sparql", "r")
+    w_file = open("constructed/nbf_event_places.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
