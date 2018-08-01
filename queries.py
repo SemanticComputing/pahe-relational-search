@@ -2,6 +2,8 @@ import requests
 
 
 def execute_query(store, write_file, query):
+    print("executing query")
+    print(query)
     response = requests.post(store,
                              data={'query': query})
     write_file.write(response.text)
@@ -86,3 +88,4 @@ def nbf_event_places_construct():
     query_file = open("queries/nbf_events_construct.sparql", "r")
     w_file = open("constructed/nbf_event_places.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+    

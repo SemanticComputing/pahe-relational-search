@@ -28,6 +28,7 @@ WHERE {
   ?place skos:prefLabel ?placeName .
   ?relation relse:placeName ?placeName .
   ?relation relse:date ?dateRaw .
+  ?relation relse:objectName ?bookName .
   BIND (xsd:date(?dateRaw) as ?date ) .
   
   ?person skosxl:prefLabel ?personLabel .
@@ -35,5 +36,5 @@ WHERE {
   ?personLabel schema:givenName ?givenName .
   
   BIND(uri(encode_for_uri(concat(str(?person), str(?place), str(?source), "novel_depicts"))) as ?uri) .
-  BIND(concat(str(?givenName), " ", str(?familyName), " on kirjoittanut romaanin joka kuvaa paikkaa ", str(?placeName), ".") as ?description) .
+  BIND(concat(str(?givenName), " ", str(?familyName), " on kirjoittanut romaanin '", str(?bookName), "' joka kuvaa paikkaa ", str(?placeName), ".") as ?description) .
 }
