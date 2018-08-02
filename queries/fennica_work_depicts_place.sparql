@@ -13,7 +13,6 @@ CONSTRUCT {
       relse:source ?work ;
       relse:sourceLink ?uri ;
       relse:relationType relse:literalWorkDepictsPlace ;
-	relse:test ?uri ;
   ]
 }
 WHERE {

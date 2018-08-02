@@ -14,7 +14,9 @@ CONSTRUCT {
     skos:prefLabel ?description ;
     relse:relationType relse:literaryWorkDepictsPlace ;
     relse:source ?source ;
-    relse:date ?date .
+    relse:date ?date ;
+    relse:sourceName "Kirjan tiedot Kansalliskirjaston tietokannassa"@fi ;
+    relse:sourceLink ?source ;
     
 }
 WHERE {

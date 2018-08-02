@@ -15,15 +15,18 @@ def death_places():
         PREFIX rel: <http://ldf.fi/relsearch/>
     	BASE <http://ldf.fi/relsearch/>
     	PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+	PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
         CONSTRUCT {
             ?uri a rel:Relation ;
                 rel:relationType rel:deathPlace ;
                 rel:personSubject ?person ;
                 rel:placeObject ?rel_place ;
-        		rel:source ?death ;
+        	rel:source ?death ;
                 rel:date ?deathtime ;
-      			skos:prefLabel ?description .
+      		skos:prefLabel ?description ;
+		rel:sourceName "Semanttinen Kansallisbiografia"@fi ;
+		rel:sourceLink ?death ;
         }
 
         WHERE {
@@ -33,26 +36,23 @@ def death_places():
             ?death crm:P100_was_death_of/^foaf:focus ?person .
             ?death ?any ?place . # nbf:place!
             ?place a|(a/rdfs:subClassOf+) ?place_class . 
-            OPTIONAL {
-      	        ?death nbf:time ?dtime . # Not general!
-      	        ?dtime gvp:estStart ?deathtime .
-            }
-            OPTIONAL {
-                ?death gvp:estStart ?deathtime .
-            }
 
-      		?rel_place a rel:Place .
-      		?rel_place skos:closeMatch ?place .
-      		?rel_place skos:prefLabel ?placeName .
+	    ?death nbf:time ?dtime . # Not general!
+  	    ?dtime gvp:estStart ?deathtime .
+            BIND (year(xsd:date(?deathtime)) As ?year)
 
-      		?person skosxl:prefLabel ?personLabel .
+      	    ?rel_place a rel:Place .
+      	    ?rel_place skos:closeMatch ?place .
+      	    ?rel_place skos:prefLabel ?placeName .
+
+      	    ?person skosxl:prefLabel ?personLabel .
             ?personLabel skos:prefLabel ?personName .
             ?personLabel schema:familyName ?familyName .
             ?personLabel schema:givenName ?givenName .
 
-      		BIND(uri(encode_for_uri(concat(str(?person), str(?rel_place), "death_place", str(?death)))) as ?uri) .
+      	    BIND(uri(encode_for_uri(concat(str(?person), str(?rel_place), "death_place", str(?death)))) as ?uri) .
 
-            BIND(concat(str(?givenName), " ", str(?familyName), " on kuollut paikkassa ", str(?placeName), ".") as ?description) .
+            BIND(concat(str(?givenName), " ", str(?familyName), " on kuollut paikkassa ", str(?placeName), " vuonna ", str(?year), ".") as ?description) .
 
         }'''
 
@@ -74,17 +74,20 @@ def birth_places():
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX rel: <http://ldf.fi/relsearch/>
-	    BASE <http://ldf.fi/relsearch/>
-	    PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+	BASE <http://ldf.fi/relsearch/>
+	PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+	PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
         CONSTRUCT {
         ?uri a rel:Relation ;
             rel:relationType rel:birthPlace ;
             rel:personSubject ?person ;
             rel:placeObject ?rel_place ;
-    		rel:source ?birth ;
+    	    rel:source ?birth ;
             rel:date ?birthTime ;
-  			skos:prefLabel ?description .
+  	    skos:prefLabel ?description ;
+	    rel:sourceName "Semanttinen Kansallisbiografia"@fi ;
+	    rel:sourceLink ?birth ;
         }
 
         WHERE {
@@ -94,26 +97,24 @@ def birth_places():
             ?birth crm:P98_brought_into_life/^foaf:focus ?person .
             ?birth ?any ?place . # nbf:place!
             ?place a|(a/rdfs:subClassOf+) ?place_class . 
-            OPTIONAL {
-  	            ?birth nbf:time ?time . # Not general!
-  	            ?time gvp:estStart ?birthTime .
-            }
-            OPTIONAL {
-                ?birth gvp:estStart ?birthTime .
-            }
+
+  	    ?birth nbf:time ?time . # Not general!
+  	    ?time gvp:estStart ?birthTime .
+	    BIND (year(xsd:date(?birthTime)) As ?year)
+
   		
-  		    ?rel_place a rel:Place .
-  		    ?rel_place skos:closeMatch ?place .
-  		    ?rel_place skos:prefLabel ?placeName .
+  	    ?rel_place a rel:Place .
+  	    ?rel_place skos:closeMatch ?place .
+  	    ?rel_place skos:prefLabel ?placeName .
   
-  		    ?person skosxl:prefLabel ?personLabel .
+	    ?person skosxl:prefLabel ?personLabel .
             ?personLabel skos:prefLabel ?personName .
             ?personLabel schema:familyName ?familyName .
             ?personLabel schema:givenName ?givenName .
   		
-  		    BIND(uri(encode_for_uri(concat(str(?person), str(?rel_place), "birth_place", str(?birth)))) as ?uri) .
+	    BIND(uri(encode_for_uri(concat(str(?person), str(?rel_place), "birth_place", str(?birth)))) as ?uri) .
   		
-            BIND(concat(str(?givenName), " ", str(?familyName), " on syntynyt paikkassa ", str(?placeName), ".") as ?description) .
+            BIND(concat(str(?givenName), " ", str(?familyName), " on syntynyt paikkassa ", str(?placeName), " vuonna ", str(?year), ".") as ?description) .
   		
         }'''
 
