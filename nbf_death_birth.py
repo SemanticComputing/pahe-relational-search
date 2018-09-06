@@ -3,58 +3,8 @@ import requests
 store = 'http://localhost:3030/ds/query'
 
 def death_places():
-    q = '''
-        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-        PREFIX schema: <http://schema.org/>
-        PREFIX nbf:	<http://ldf.fi/nbf/>
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-        PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
-        PREFIX gvp: <http://vocab.getty.edu/ontology#>
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX rel: <http://ldf.fi/relsearch/>
-    	BASE <http://ldf.fi/relsearch/>
-    	PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
-	PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
-        CONSTRUCT {
-            ?uri a rel:Relation ;
-                rel:relationType rel:deathPlace ;
-                rel:personSubject ?person ;
-                rel:placeObject ?rel_place ;
-        	rel:source ?death ;
-                rel:date ?deathtime ;
-      		skos:prefLabel ?description ;
-		rel:sourceName "Semanttinen Kansallisbiografia"@fi ;
-		rel:sourceLink ?death ;
-        }
-
-        WHERE {
-            VALUES ?place_class { schema:Place nbf:Place rel:Place }
-            VALUES ?person_class { gvp:PersonConcept foaf:Person }
-            ?person a|(a/rdfs:subClassOf+) ?person_class .
-            ?death crm:P100_was_death_of/^foaf:focus ?person .
-            ?death ?any ?place . # nbf:place!
-            ?place a|(a/rdfs:subClassOf+) ?place_class . 
-
-	    ?death nbf:time ?dtime . # Not general!
-  	    ?dtime gvp:estStart ?deathtime .
-            BIND (year(xsd:date(?deathtime)) As ?year)
-
-      	    ?rel_place a rel:Place .
-      	    ?rel_place skos:closeMatch ?place .
-      	    ?rel_place skos:prefLabel ?placeName .
-
-      	    ?person skosxl:prefLabel ?personLabel .
-            ?personLabel skos:prefLabel ?personName .
-            ?personLabel schema:familyName ?familyName .
-            ?personLabel schema:givenName ?givenName .
-
-      	    BIND(uri(encode_for_uri(concat(str(?person), str(?rel_place), "death_place", str(?death)))) as ?uri) .
-
-            BIND(concat(str(?givenName), " ", str(?familyName), " on kuollut paikkassa ", str(?placeName), " vuonna ", str(?year), ".") as ?description) .
-
-        }'''
+    query_file = open("queries/nbf_deaths.sparql", "r")
+    q = query_file.read()
 
     response = requests.post(store,
                              data={'query': q})
@@ -64,59 +14,8 @@ def death_places():
     write_file.write(response.text)
 
 def birth_places():
-    q = '''
-        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-        PREFIX schema: <http://schema.org/>
-        PREFIX nbf:	<http://ldf.fi/nbf/>
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-        PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
-        PREFIX gvp: <http://vocab.getty.edu/ontology#>
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX rel: <http://ldf.fi/relsearch/>
-	BASE <http://ldf.fi/relsearch/>
-	PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
-	PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
-        CONSTRUCT {
-        ?uri a rel:Relation ;
-            rel:relationType rel:birthPlace ;
-            rel:personSubject ?person ;
-            rel:placeObject ?rel_place ;
-    	    rel:source ?birth ;
-            rel:date ?birthTime ;
-  	    skos:prefLabel ?description ;
-	    rel:sourceName "Semanttinen Kansallisbiografia"@fi ;
-	    rel:sourceLink ?birth ;
-        }
-
-        WHERE {
-            VALUES ?place_class { schema:Place nbf:Place rel:Place }
-            VALUES ?person_class { gvp:PersonConcept foaf:Person }
-            ?person a|(a/rdfs:subClassOf+) ?person_class .
-            ?birth crm:P98_brought_into_life/^foaf:focus ?person .
-            ?birth ?any ?place . # nbf:place!
-            ?place a|(a/rdfs:subClassOf+) ?place_class . 
-
-  	    ?birth nbf:time ?time . # Not general!
-  	    ?time gvp:estStart ?birthTime .
-	    BIND (year(xsd:date(?birthTime)) As ?year)
-
-  		
-  	    ?rel_place a rel:Place .
-  	    ?rel_place skos:closeMatch ?place .
-  	    ?rel_place skos:prefLabel ?placeName .
-  
-	    ?person skosxl:prefLabel ?personLabel .
-            ?personLabel skos:prefLabel ?personName .
-            ?personLabel schema:familyName ?familyName .
-            ?personLabel schema:givenName ?givenName .
-  		
-	    BIND(uri(encode_for_uri(concat(str(?person), str(?rel_place), "birth_place", str(?birth)))) as ?uri) .
-  		
-            BIND(concat(str(?givenName), " ", str(?familyName), " on syntynyt paikkassa ", str(?placeName), " vuonna ", str(?year), ".") as ?description) .
-  		
-        }'''
+    query_file = open("queries/nbf_births.sparql", "r")
+    q = query_file.read()
 
     response = requests.post(store,
                              data={'query': q})

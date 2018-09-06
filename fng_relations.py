@@ -99,7 +99,7 @@ def add_painting_depicts_place(g, elem, artists, x, place_uri, place_name):
     g.add((resource_uri, rel.personSubject, URIRef(artist[1])))
     g.add((resource_uri, rel.placeObject, URIRef(place_uri.replace('"','').strip())))
     g.add((resource_uri, rel.relationType, rel.paintingDepictsPlace))
-    g.add((resource_uri, rel.sourceName, Literal("Kansallisgalleria", lang='fi')))
+    g.add((resource_uri, rel.sourceName, Literal("Taulun tiedot Kansallisgallerian tietokannassa", lang='fi')))
     if get_date(elem).isdigit():
         g.add((resource_uri, rel.date, Literal(get_date(elem), datatype=XSD.date)))
         g.add((resource_uri, namespace.SKOS.prefLabel, Literal(

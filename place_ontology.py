@@ -1,7 +1,7 @@
 from rdflib import Graph, Literal, namespace, Namespace, XSD, URIRef
 import requests
 
-rel = Namespace('http://ldf.fi/relsearch/')
+rel = Namespace('http://ldf.fi/relse/')
 
 def generate_places(r_g, w_g):
     q = r_g.query('''

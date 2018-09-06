@@ -1,0 +1,20 @@
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX relse: <http://ldf.fi/relsearch/>
+BASE <http://ldf.fi/relsearch/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+CONSTRUCT {
+  ?uri a schema:Person ;
+    schema:relatedLink ?link ;
+    owl:sameAs ?person ;
+    skos:prefLabel ?label .
+}
+WHERE {
+  ?person a nbf:PersonConcept .
+  ?person skos:prefLabel ?label .
+  ?person schema:relatedLink ?link .
+  BIND(REPLACE(str(?person), "http://ldf.fi/nbf/", "", "i") AS ?id) .
+  BIND(URI(CONCAT("person",?id)) as ?uri) .
+}

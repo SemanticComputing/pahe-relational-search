@@ -16,6 +16,7 @@ CONSTRUCT {
   relse:personSubject ?person ;
   relse:placeObject ?place ;
   skos:prefLabel ?description ;
+  relse:sourceName "Tapahtuman tiedot HISTO-ontologiassa"@fi
 }
 WHERE {
   ?relation a relse:Relation .
@@ -39,7 +40,7 @@ WHERE {
   ?personLabel schema:givenName ?givenName .
   
   
-  BIND (URI(ENCODE_FOR_URI(CONCAT(?givenName, ?familyName, ?placeName, str(?source), "event_took_place_at"))) AS ?uri) .
+  BIND (URI(ENCODE_FOR_URI(CONCAT(?givenName, ?familyName, ?placeName, str(?source), str(?year), "event_took_place_at"))) AS ?uri) .
   
   BIND (CONCAT(?givenName, " ", ?familyName, " otti osaa vuonna ", str(?year), " alkaneeseen historialliseen tapahtumaan '", ?name, "', joka liittyy paikkaan ", ?placeName, ".") AS ?description) .
   

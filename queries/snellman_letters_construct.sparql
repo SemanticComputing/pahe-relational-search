@@ -18,6 +18,7 @@ CONSTRUCT {
   relse:personSubject ?person ;
   relse:placeObject ?place ;
   skos:prefLabel ?description ;
+  relse:sourceName "J. V. Snellmanin koottujen teosten tekstilähde"@fi ;
 }
 WHERE {
   
@@ -43,5 +44,5 @@ WHERE {
 
     BIND (URI(ENCODE_FOR_URI(CONCAT(?givenName, ?familyName, ?placeName, str(?source), "letter_written_at"))) AS ?uri) .
   
-  BIND (CONCAT(?givenName, " ", ?familyName, " lähetti vuonna ", str(?year), " kirjeen paikasta '", ?placeName, ".") AS ?description) .
+  BIND (CONCAT(?givenName, " ", ?familyName, " lähetti vuonna ", str(?year), " kirjeen paikasta ", ?placeName, ".") AS ?description) .
 }

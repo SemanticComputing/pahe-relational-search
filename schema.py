@@ -1,6 +1,6 @@
 from rdflib import Graph, Literal, namespace, Namespace, XSD, URIRef
 
-rel = Namespace('http://ldf.fi/relsearch/')
+rel = Namespace('http://ldf.fi/relse/')
 
 def schema(g):
 
@@ -100,7 +100,7 @@ def schema(g):
     # events
 
     g.add((rel.eventRelation, namespace.RDF.type, rel.RelationType))
-    g.add((rel.eventRelation, namespace.SKOS.prefLabel, Literal('Tapahtumaan liittyvä yhteys', lang='fi')))
+    g.add((rel.eventRelation, namespace.SKOS.prefLabel, Literal('Tapahtumiin liittyvat yhteydet', lang='fi')))
 
     g.add((rel.eventTookPlaceAt, namespace.RDF.type, rel.RelationType))
     g.add((rel.eventTookPlaceAt, namespace.SKOS.prefLabel, Literal('A liittyy historialliseen tapahtumaan paikassa B', lang='fi')))

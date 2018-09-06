@@ -14,7 +14,9 @@ CONSTRUCT {
     skos:prefLabel ?description ;
     relse:relationType relse:novelDepictsPlace ;
     relse:source ?source ;
-    relse:date ?date .
+    relse:date ?date ;
+    relse:sourceName "Kirjan tiedot Kirjasammossa"@fi ;
+    relse:sourceLink ?sampoLink ;
     
 }
 WHERE {
@@ -23,6 +25,7 @@ WHERE {
   ?relation relse:personSubject ?subject .
   ?relation relse:placeObject ?object .
   ?person a nbf:PersonConcept .
+  ?person
   ?person nbf:kirjasampo ?subject .  # Not general
   ?place a relse:Place .
   ?place skos:prefLabel ?placeName .
@@ -34,6 +37,10 @@ WHERE {
   ?person skosxl:prefLabel ?personLabel .
   ?personLabel schema:familyName ?familyName .
   ?personLabel schema:givenName ?givenName .
+  
+  BIND(replace(str(?source), "http://seco.tkk.fi/", "https://www.kirjasampo.fi/fi/kulsa/") as ?saha_replaced) .
+  BIND(replace(str(?saha_replaced), "http://www.btj.fi/at_", "https://www.kirjasampo.fi/fi/kulsa/http%253A%252F%252Fwww.btj.fi%252Fft_") as ?btj_replaced) .
+  BIND(uri(replace(str(?btj_replaced), "http://www.yso.fi/onto/kaunokki#", "https://www.kirjasampo.fi/fi/kulsa/kauno%253A")) as ?sampoLink) .
   
   BIND(uri(encode_for_uri(concat(str(?person), str(?place), str(?source), "novel_depicts"))) as ?uri) .
   BIND(concat(str(?givenName), " ", str(?familyName), " on kirjoittanut romaanin '", str(?bookName), "' joka kuvaa paikkaa ", str(?placeName), ".") as ?description) .

@@ -1,0 +1,60 @@
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX relse: <http://ldf.fi/relsearch/>
+BASE <http://ldf.fi/relse/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+PREFIX sc: <http://purl.org/science/owl/sciencecommons/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+  ?uri a relse:Relation ;
+    relse:personSubject ?person1 ;
+    relse:personObject ?person2 ;
+    relse:date ?earlierDate ;
+    skos:prefLabel ?description ;
+    relse:source ?source1 ;
+    relse:source ?source2 ;
+    rdfs:seeAlso ?placeMatch .
+}
+    
+WHERE {
+
+  ?relation1 a relse:Relation .
+  ?relation1 relse:date ?date1 .
+  FILTER(?date1 < "1700-01-01"^^xsd:date) .
+
+  ?relation2 a relse:Relation .
+    
+  ?relation1 relse:placeObject ?place .
+  ?relation2 relse:placeObject ?place .
+  
+  ?relation1 relse:personSubject ?person1 .
+  ?relation2 relse:personSubject ?person2 .
+  
+  FILTER (?person1 != ?person2) .
+    
+  ?relation2 relse:date ?date2 .
+  
+  ?relation1 relse:source ?source1 .
+  ?relation2 relse:source ?source2 .
+  
+  ?person1 skosxl:prefLabel ?label1 .
+  ?label1 schema:familyName ?familyName1 .
+  ?label1 schema:givenName ?givenName1 .
+  
+  ?person2 skosxl:prefLabel ?label2 .
+  ?label2 schema:familyName ?familyName2 .
+  ?label2 schema:givenName ?givenName2 .
+  
+  ?place skos:prefLabel ?placeLabel .
+  ?place skos:exactMatch ?placeMatch .
+  
+  BIND (if(?date1 < ?date2, ?date1, ?date2) as ?earlierDate) .
+  
+  BIND (concat(str(?givenName1), " ", str(?familyName1), " ja ", str(?givenName2), " ", str(?familyName2), " ovat molemmat syntyneet paikassa ", str(?placeLabel), ".") as ?description ) 
+  
+  BIND (uri(encode_for_uri(concat("AAb", str(?person1), str(?person2), "_same_b_place"))) as ?uri)
+}

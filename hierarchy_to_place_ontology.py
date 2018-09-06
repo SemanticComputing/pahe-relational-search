@@ -1,13 +1,13 @@
 from rdflib import Graph, Literal, namespace, Namespace, XSD, URIRef
 import requests
 
-rel = Namespace('http://ldf.fi/relsearch/')
+rel = Namespace('http://ldf.fi/relse/')
 
 def first_level_broader(g):
     q = '''
         PREFIX yso: <http://www.yso.fi/onto/yso/>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-        PREFIX rel: <http://ldf.fi/relsearch/>
+        PREFIX rel: <http://ldf.fi/relse/>
         PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
         SELECT DISTINCT ?relPlace ?broaderPlace

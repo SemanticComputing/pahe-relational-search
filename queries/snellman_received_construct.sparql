@@ -18,6 +18,7 @@ CONSTRUCT {
   relse:personSubject ?person ;
   relse:placeObject ?place ;
   skos:prefLabel ?description ;
+  relse:sourceName "J. V. Snellmanin koottujen teosten tekstilähde"@fi ;
 }
 WHERE {
   
