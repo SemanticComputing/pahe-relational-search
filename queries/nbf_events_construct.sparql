@@ -6,10 +6,12 @@ PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX gvp: <http://vocab.getty.edu/ontology#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rel: <http://ldf.fi/relsearch/>
+PREFIX rel: <http://ldf.fi/relse/>
 PREFIX bioc: <http://ldf.fi/schema/bioc/> 
 PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
-BASE <http://ldf.fi/relsearch/>
+BASE <http://ldf.fi/relse/>
+PREFIX st: <http://semweb.mmlab.be/ns/stoptimes#>
+PREFIX str: <http://nlp2rdf.lod2.eu/schema/string/>
 
 CONSTRUCT {
 ?uri a rel:Relation ;
@@ -25,45 +27,46 @@ rel:sourceName "Tapahtuma Semanttisessa Kansallisbiografiassa" ;
 }
 
 WHERE {
-    VALUES ?place_class { schema:Place nbf:Place rel:Place } 
-    ?event_class rdfs:subClassOf+ schema:Event .
-    ?event a ?event_class .
-    ?event bioc:inheres_in ?actor .
-    ?person foaf:focus ?actor .
-    ?event skos:prefLabel ?eventLabel .
-    FILTER (lang(?eventLabel) = 'fi') .
-    ?event_class skos:prefLabel ?eClassLabel .
-    BIND( str(?eClassLabel) as ?eClassName) .
-    FILTER (lang(?eClassLabel) = 'fi') .
-    ?place a|(a/rdfs:subClassOf) ?place_class .
-    ?event ?any ?place .
+  VALUES ?place_class { schema:Place nbf:Place rel:Place } 
+  ?event_class rdfs:subClassOf+ schema:Event .
+  ?event a ?event_class .
+  ?event bioc:inheres_in ?actor .
+  ?person foaf:focus ?actor .
+  ?event skos:prefLabel ?eventLabel .
+  FILTER (lang(?eventLabel) = 'fi') .
+  ?event_class skos:prefLabel ?eClassLabel .
+  BIND( str(?eClassLabel) as ?eClassName) .
 
-    ?rel_place a rel:Place .
-    ?rel_place skos:closeMatch ?place .
-    ?rel_place skos:prefLabel ?placeLabel .
+  FILTER (lang(?eClassLabel) = 'fi') .
+  FILTER(?eClassName != "Tuote") .
+  
+  ?place a|(a/rdfs:subClassOf) ?place_class .
+  ?event ?any ?place .
+  ?place skos:prefLabel ?placeLabel .
+  
+  FILTER(str(?placeLabel) != "Suomen leijona") .
 
-    OPTIONAL {
+  OPTIONAL {
     ?event gvp:estStart ?date .
-    }
-    OPTIONAL {
+  }
+  OPTIONAL {
     ?event ?hasTime ?time .
     ?time gvp:estStart ?date .
-    }
+  }
 
 
-    ?person skosxl:prefLabel ?personLabel .
-    ?personLabel skos:prefLabel ?personName .
-    ?personLabel schema:familyName ?familyName .
-    ?personLabel schema:givenName ?givenName .
-    FILTER(?eClassName != "Tuote")	
+  ?person skosxl:prefLabel ?personLabel .
+  ?personLabel skos:prefLabel ?personName .
+  ?personLabel schema:familyName ?familyName .
+  ?personLabel schema:givenName ?givenName .
 
   BIND ( IF (?eClassName = "Ura", rel:careerAtPlace, rel:honourAtPlace) AS ?relationType)
   
   BIND(uri(encode_for_uri(concat(str(?personName), str(?placeLabel), str(?eClassLabel), str(?event), "event_at"))) as ?uri) .
   BIND( IF (?eClassName = "Ura", 
-      concat("Henkilön ", str(?givenName), " ", str(?familyName), " uraan tai opiskeluun liittyy paikassa ", str(?placeLabel), " ", "tapahtuma: ", str(?eventLabel)), 
+      concat(str(?givenName), " ", str(?familyName), " uraan tai opiskeluun liittyy paikassa ", str(?placeLabel), " ", "tapahtuma: ", str(?eventLabel)), 
       IF (?eClassName = "Kunnianosoitus",
-        concat("Henkilö ", str(?givenName), " ", str(?familyName), " on vastaanottanut kunnianosoituksen: ", str(?eventLabel)), 
+        concat(str(?givenName), " ", str(?familyName), " on vastaanottanut kunnianosoituksen joka liittyy paikkaan ", str(?placeLabel), ": '", str(?eventLabel), "'."), 
                 concat("Henkilön ", str(?givenName), " ", str(?familyName), " elämään liittyy paikassa ", str(?placeLabel), " ", "tapahtuma tyyppiä '", lcase(?eClassName), "': ", str(?eventLabel)))) 
         as ?description)
   

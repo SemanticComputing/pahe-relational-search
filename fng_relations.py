@@ -84,11 +84,14 @@ def add_place_relations(g, elem, places, artists, x):
 
 
 def add_painting_depicts_place(g, elem, artists, x, place_uri, place_name):
-    resource_uri = rel['fng_painting_depicts_place_rel{}'.format(x)]
+    #resource_uri = rel['fng_painting_depicts_place_rel{}'.format(x)]
     if get_artist(elem, artists):
         artist = get_artist(elem, artists)
     else:
         return False
+
+    resource_uri = rel['fng_painting_depicts_place_rel_{0}_{1}_{2}'.format(artist[1], place_uri.replace('"','').strip(), get_uri(elem))]
+
     if get_title(elem) != -1:
         title = get_title(elem)
     else:
@@ -113,7 +116,7 @@ def add_painting_depicts_place(g, elem, artists, x, place_uri, place_name):
 
 def parse():
 
-    csv_place = csv.reader(open('csv/rel_places.csv', 'r'))
+    csv_place = csv.reader(open('csv/new_nbf_places.csv', 'r'))
     place_list = utilities.make_list(csv_place)
 
     csv_art = csv.reader(open('csv/nbf_artists.csv', 'r'))
