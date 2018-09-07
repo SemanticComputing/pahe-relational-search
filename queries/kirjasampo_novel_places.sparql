@@ -5,7 +5,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX kaunokki: <http://www.yso.fi/onto/kaunokki#>
 PREFIX saha: <http://seco.tkk.fi/saha3/>
 PREFIX btj: <http://www.btj.fi/>
-PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX relse: <http://ldf.fi/relse/>
 PREFIX yso: <http://www.yso.fi/onto/yso/>
 
 CONSTRUCT {
