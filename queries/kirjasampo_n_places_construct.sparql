@@ -2,10 +2,10 @@ PREFIX schema: <http://schema.org/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX nbf:	<http://ldf.fi/nbf/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX relse: <http://ldf.fi/relse/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
-BASE <http://ldf.fi/relsearch/>
+BASE <http://ldf.fi/relse/>
 
 CONSTRUCT {
   ?uri a relse:Relation ;
@@ -24,12 +24,13 @@ WHERE {
   ?relation relse:source ?source .
   ?relation relse:personSubject ?subject .
   ?relation relse:placeObject ?object .
-  ?person a nbf:PersonConcept .
-  ?person
+  
   ?person nbf:kirjasampo ?subject .  # Not general
-  ?place a relse:Place .
+  ?place a nbf:Place .
+
   ?place skos:prefLabel ?placeName .
   ?relation relse:placeName ?placeName .
+  
   ?relation relse:date ?dateRaw .
   ?relation relse:objectName ?bookName .
   BIND (xsd:date(?dateRaw) as ?date ) .

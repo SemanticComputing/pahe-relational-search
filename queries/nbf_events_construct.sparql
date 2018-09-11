@@ -16,7 +16,7 @@ PREFIX str: <http://nlp2rdf.lod2.eu/schema/string/>
 CONSTRUCT {
 ?uri a rel:Relation ;
 rel:personSubject ?person ;
-rel:placeObject ?rel_place ;
+rel:placeObject ?place ;
 rel:date ?date ;
 rel:relationType ?relationType ;
 rel:relationTypeComment ?eClassName ;
@@ -32,6 +32,10 @@ WHERE {
   ?event a ?event_class .
   ?event bioc:inheres_in ?actor .
   ?person foaf:focus ?actor .
+  optional {
+  	?actor nbf:sukupuoli ?gender .
+  	FILTER (str(?gender) != 'pariskunta') .
+  }
   ?event skos:prefLabel ?eventLabel .
   FILTER (lang(?eventLabel) = 'fi') .
   ?event_class skos:prefLabel ?eClassLabel .
@@ -44,6 +48,7 @@ WHERE {
   ?event ?any ?place .
   ?place skos:prefLabel ?placeLabel .
   
+  FILTER(str(?placeLabel) != "Suomi") .
   FILTER(str(?placeLabel) != "Suomen leijona") .
 
   OPTIONAL {
@@ -54,7 +59,6 @@ WHERE {
     ?time gvp:estStart ?date .
   }
 
-
   ?person skosxl:prefLabel ?personLabel .
   ?personLabel skos:prefLabel ?personName .
   ?personLabel schema:familyName ?familyName .
@@ -64,7 +68,7 @@ WHERE {
   
   BIND(uri(encode_for_uri(concat(str(?personName), str(?placeLabel), str(?eClassLabel), str(?event), "event_at"))) as ?uri) .
   BIND( IF (?eClassName = "Ura", 
-      concat(str(?givenName), " ", str(?familyName), " uraan tai opiskeluun liittyy paikassa ", str(?placeLabel), " ", "tapahtuma: ", str(?eventLabel)), 
+      concat("Henkilön ", str(?givenName), " ", str(?familyName), " uraan tai opiskeluun liittyy paikassa ", str(?placeLabel), " ", "tapahtuma: ", str(?eventLabel)), 
       IF (?eClassName = "Kunnianosoitus",
         concat(str(?givenName), " ", str(?familyName), " on vastaanottanut kunnianosoituksen joka liittyy paikkaan ", str(?placeLabel), ": '", str(?eventLabel), "'."), 
                 concat("Henkilön ", str(?givenName), " ", str(?familyName), " elämään liittyy paikassa ", str(?placeLabel), " ", "tapahtuma tyyppiä '", lcase(?eClassName), "': ", str(?eventLabel)))) 

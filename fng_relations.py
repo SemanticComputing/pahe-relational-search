@@ -3,8 +3,10 @@ import utilities
 import json
 from rdflib import Graph, Literal, namespace, Namespace, XSD, URIRef
 
-rel = Namespace('http://ldf.fi/relsearch/')
+rel = Namespace('http://ldf.fi/relse/')
 
+# removed "Ikaalinen, Hämeenkyrö" manually from csv
+# commas within names cause mistakes, but that should be the only case
 
 def binary_search(values, target):
     low = 0
