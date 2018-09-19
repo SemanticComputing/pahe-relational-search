@@ -48,14 +48,15 @@ def schema(g):
 
     g.add((rel.lifeEvent, namespace.RDF.type, rel.RelationType))
     g.add((rel.lifeEvent, namespace.SKOS.prefLabel, Literal('Syntymä ja kuolema', lang='fi')))
+    g.add((rel.lifeEvent, namespace.SKOS.broader, rel.eventRelation))
 
     g.add((rel.birthPlace, namespace.RDF.type, rel.RelationType))
     g.add((rel.birthPlace, namespace.SKOS.broader, rel.lifeEvent))
-    g.add((rel.birthPlace, namespace.SKOS.prefLabel, Literal('A on syntynyt paikassa B', lang='fi')))
+    g.add((rel.birthPlace, namespace.SKOS.prefLabel, Literal('Syntynyt paikassa', lang='fi')))
 
     g.add((rel.deathPlace, namespace.RDF.type, rel.RelationType))
     g.add((rel.deathPlace, namespace.SKOS.broader, rel.lifeEvent))
-    g.add((rel.deathPlace, namespace.SKOS.prefLabel, Literal('A on kuollut paikassa B', lang='fi')))
+    g.add((rel.deathPlace, namespace.SKOS.prefLabel, Literal('Kuollut paikassa', lang='fi')))
 
 
     # letters
@@ -65,37 +66,37 @@ def schema(g):
 
     g.add((rel.letterSentFrom, namespace.RDF.type, rel.RelationType))
     g.add((rel.letterSentFrom, namespace.SKOS.broader, rel.letters))
-    g.add((rel.letterSentFrom, namespace.SKOS.prefLabel, Literal('A on lähettänyt kirjeen paikasta B', lang='fi')))
+    g.add((rel.letterSentFrom, namespace.SKOS.prefLabel, Literal('Lähettetty kirje paikasta', lang='fi')))
 
     g.add((rel.letterReceivedFrom, namespace.RDF.type, rel.RelationType))
     g.add((rel.letterReceivedFrom, namespace.SKOS.broader, rel.letters))
-    g.add((rel.letterReceivedFrom, namespace.SKOS.prefLabel, Literal('A on vastaanottanut kirjeen paikasta B', lang='fi')))
+    g.add((rel.letterReceivedFrom, namespace.SKOS.prefLabel, Literal('Vastaanotettu kirje paikasta', lang='fi')))
 
 
     # created work relates to place
 
     g.add((rel.creationEvent, namespace.RDF.type, rel.RelationType))
     g.add((rel.creationEvent, namespace.SKOS.prefLabel,
-           Literal('A on luonut teoksen joka liittyy paikkaan B', lang='fi')))
+           Literal('Teos liittyy paikkaan', lang='fi')))
 
     g.add((rel.workDepictsPlace, namespace.RDF.type, rel.RelationType))
     g.add((rel.workDepictsPlace, namespace.SKOS.broader, rel.creationEvent))
     g.add((rel.workDepictsPlace, namespace.SKOS.prefLabel,
-           Literal('A on luonut teoksen joka kuvaa paikkaa B', lang='fi')))
+           Literal('Teos kuvaa paikkaa', lang='fi')))
 
     g.add((rel.paintingDepictsPlace, namespace.RDF.type, rel.RelationType))
     g.add((rel.paintingDepictsPlace, namespace.SKOS.broader, rel.workDepictsPlace))
     g.add((rel.paintingDepictsPlace, namespace.SKOS.prefLabel,
-           Literal('A on maalannut teoksen joka kuvaa paikkaa B', lang='fi')))
+           Literal('Maalaus kuvaa paikkaa', lang='fi')))
 
     g.add((rel.novelDepictsPlace, namespace.RDF.type, rel.RelationType))
     g.add((rel.novelDepictsPlace, namespace.SKOS.broader, rel.literaryWorkDepictsPlace))
     g.add((rel.novelDepictsPlace, namespace.SKOS.prefLabel,
-                     Literal('A on kirjoittanut romaanin joka kuvaa paikkaa B', lang='fi')))
+                     Literal('Romaani kuvaa paikkaa', lang='fi')))
 
     g.add((rel.literaryWorkDepictsPlace, namespace.RDF.type, rel.RelationType))
     g.add((rel.literaryWorkDepictsPlace, namespace.SKOS.broader, rel.workDepictsPlace))
-    g.add((rel.literaryWorkDepictsPlace, namespace.SKOS.prefLabel, Literal('A on kirjoittanut kirjalllisen teoksen joka kuvaa paikkaa B', lang='fi')))
+    g.add((rel.literaryWorkDepictsPlace, namespace.SKOS.prefLabel, Literal('Kirjoitus kuvaa paikkaa', lang='fi')))
 
     # events
 
@@ -103,21 +104,21 @@ def schema(g):
     g.add((rel.eventRelation, namespace.SKOS.prefLabel, Literal('Tapahtumiin liittyvat yhteydet', lang='fi')))
 
     g.add((rel.eventTookPlaceAt, namespace.RDF.type, rel.RelationType))
-    g.add((rel.eventTookPlaceAt, namespace.SKOS.prefLabel, Literal('A liittyy historialliseen tapahtumaan paikassa B', lang='fi')))
+    g.add((rel.eventTookPlaceAt, namespace.SKOS.prefLabel, Literal('Historiallinen tapahtuma paikassa', lang='fi')))
     g.add((rel.eventTookPlaceAt, namespace.SKOS.broader, rel.eventRelation))
 
-    g.add((rel.minorEvent, namespace.RDF.type, rel.RelationType))
-    g.add((rel.minorEvent, namespace.SKOS.prefLabel, Literal('Henkilökohtaiset tapahtumat')))
-    g.add((rel.minorEvent, namespace.SKOS.broader, rel.eventRelation))
+    #g.add((rel.minorEvent, namespace.RDF.type, rel.RelationType))
+    #g.add((rel.minorEvent, namespace.SKOS.prefLabel, Literal('Henkilökohtaiset tapahtumat')))
+    #g.add((rel.minorEvent, namespace.SKOS.broader, rel.eventRelation))
 
     g.add((rel.careerAtPlace, namespace.RDF.type, rel.RelationType))
-    g.add((rel.careerAtPlace, namespace.SKOS.broader, rel.minorEvent))
-    g.add((rel.careerAtPlace, namespace.SKOS.prefLabel, Literal('A:n ura tai opiskelu liittyy paikkaan B', lang='fi')))
+    g.add((rel.careerAtPlace, namespace.SKOS.broader, rel.eventRelation))
+    g.add((rel.careerAtPlace, namespace.SKOS.prefLabel, Literal('Ura tai opiskelu liittyy paikkaan', lang='fi')))
 
     g.add((rel.honourAtPlace, namespace.RDF.type, rel.RelationType))
-    g.add((rel.honourAtPlace, namespace.SKOS.broader, rel.minorEvent))
+    g.add((rel.honourAtPlace, namespace.SKOS.broader, rel.eventRelation))
     g.add((rel.honourAtPlace, namespace.SKOS.prefLabel,
-                 Literal('A on vastaanottanut kunnianosoituksen paikassa B', lang='fi')))
+                 Literal('Kunnianosoitus liittyy paikkaan', lang='fi')))
 
 
 

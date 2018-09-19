@@ -3,7 +3,8 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX schema: <http://schema.org/>
-PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX relse: <http://ldf.fi/relse/>
+PREFIX nbf:   <http://ldf.fi/nbf/>
     
 CONSTRUCT {
   ?relPlace skos:closeMatch ?place .

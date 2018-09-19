@@ -1,0 +1,56 @@
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX relse: <http://ldf.fi/relsearch/>
+BASE <http://ldf.fi/relse/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX gvp: <http://vocab.getty.edu/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+  ?uri a schema:Person ;
+    schema:relatedLink ?link ;
+    owl:sameAs ?person ;
+    foaf:focus ?focus ;
+    skos:prefLabel ?finnishName .
+}
+WHERE {
+  ?person a nbf:PersonConcept .
+  ?person skosxl:prefLabel ?label .
+  ?label skos:prefLabel ?name .
+  ?label schema:familyName ?familyName .
+  ?label schema:givenName ?givenName .
+  ?person schema:relatedLink ?link .
+  ?person foaf:focus ?focus .
+  #BIND(strbefore(str(?label), ")") as ?before) .
+  #BIND(concat(?before, ")") as ?name) .
+  FILTER(str(?givenName) != 'suku')
+  BIND(REPLACE(str(?person), "http://ldf.fi/nbf/", "", "i") AS ?id) .
+  BIND(URI(CONCAT("person",?id)) as ?uri) .
+  BIND(REPLACE(str(?familyName), "von ", "") AS ?non_von_familyName) .
+  ?person foaf:focus ?focus .
+  optional {
+  	?birth crm:P98_brought_into_life ?focus .
+    ?birth nbf:time ?time .
+    ?time gvp:estStart ?birthTime .
+    BIND (year(xsd:date(?birthTime)) As ?byear) .
+  }
+  optional {
+    bind(" " as ?byear) .
+  }
+  optional {
+  	?death crm:P100_was_death_of ?focus .
+    ?death nbf:time ?dtime .
+    ?dtime gvp:estStart ?deathTime .
+    BIND (year(xsd:date(?deathTime)) As ?dyear) .
+  }
+  optional {
+    bind(" " as ?dyear) .
+  }
+  BIND(CONCAT(?non_von_familyName, ", ", ?givenName, " (", str(?byear), " - ", str(?dyear), ")") AS ?fullName) .
+  BIND(STRLANG(?fullName, 'fi') AS ?finnishName) . 
+}
+ORDER BY ?finnishName

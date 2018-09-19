@@ -1,3 +1,4 @@
+PREFIX nbf:	<http://ldf.fi/nbf/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX schema: <http://schema.org/>
 PREFIX nbf:	<http://ldf.fi/nbf/>
@@ -15,11 +16,11 @@ CONSTRUCT {
   ?uri a rel:Relation ;
     rel:relationType rel:birthPlace ;
     rel:personSubject ?person ;
-    rel:placeObject ?place ;
+    rel:placeObject ?rel_place ;
     rel:source ?birth ;
     rel:date ?birthTime ;
     skos:prefLabel ?description ;
-    rel:sourceName "Semanttinen Kansallisbiografia"@fi ;
+    rel:sourceName "Tapahtuma Semanttisessa Kansallisbiografiassa" ;
     rel:sourceLink ?birth ;
 }
 
@@ -33,9 +34,12 @@ WHERE {
 
   ?birth nbf:time ?time . # Not general!
   ?time gvp:estStart ?birthTime .
-  BIND (year(xsd:date(?birthTime)) As ?year)
-
+  BIND (year(xsd:date(?birthTime)) As ?year) .
+  
   ?place skos:prefLabel ?placeName .
+  FILTER(lang(?placeName) = 'fi') .
+  ?rel_place a rel:Place .
+  ?rel_place skos:prefLabel ?placeName .
 
   ?person skosxl:prefLabel ?personLabel .
   ?personLabel skos:prefLabel ?personName .

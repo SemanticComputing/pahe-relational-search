@@ -76,7 +76,7 @@ def add_place_relations(g, elem, places, artists, x):
             if 'keyword' in row:
                 subject = row['keyword']
                 index = find_index(subject, places[0])
-                if index != -1 and subject != 'Johannes':   # There is a place called Johannes
+                if index != -1 and subject != 'Johannes' and subject != 'Suomi':   # There is a place called Johannes
                     place_uri = places[1][index]
                     add_painting_depicts_place(g, elem, artists, x, place_uri, subject)
                     x = x + 1
@@ -118,7 +118,7 @@ def add_painting_depicts_place(g, elem, artists, x, place_uri, place_name):
 
 def parse():
 
-    csv_place = csv.reader(open('csv/new_nbf_places.csv', 'r'))
+    csv_place = csv.reader(open('csv/rel_places.csv', 'r'))
     place_list = utilities.make_list(csv_place)
 
     csv_art = csv.reader(open('csv/nbf_artists.csv', 'r'))

@@ -1,5 +1,5 @@
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX relse: <http://ldf.fi/relse/>
 PREFIX snellman: <http://ldf.fi/snellman/>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
     

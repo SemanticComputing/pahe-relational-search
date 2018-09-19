@@ -3,7 +3,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX schema: <http://schema.org/>
-PREFIX relse: <http://ldf.fi/relsearch/>
+PREFIX relse: <http://ldf.fi/relse/>
 PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
 PREFIX nbf:	<http://ldf.fi/nbf/>
     
@@ -26,6 +26,8 @@ WHERE {
   ?place skos:closeMatch ?object .
   ?place skos:prefLabel ?placeName .
   
+  FILTER(str(?placeName) != "Suomi") .
+  
   ?relation relse:date ?date .
   BIND(year(xsd:date(?date)) AS ?year)
 
@@ -34,7 +36,8 @@ WHERE {
   ?relation relse:entityName ?name .
 
   
-  ?person skos:exactMatch ?subject .
+  ?person nbf:histo ?subject .
+  ?person schema:relatedLink ?link .
   ?person skosxl:prefLabel ?personLabel .
   ?personLabel schema:familyName ?familyName .
   ?personLabel schema:givenName ?givenName .

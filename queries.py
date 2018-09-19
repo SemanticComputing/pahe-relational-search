@@ -34,6 +34,7 @@ def raw_fennica_subject_places():
 
 # needs people; fennica_links; place_ontology; raw_fennica
 def fennica_works():
+    print("fennica")
     query_file = open("queries/fennica_works.sparql", "r")
     w_file = open("constructed/fennica_work_places.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
@@ -46,12 +47,12 @@ def history_event_places_raw():
     execute_query("http://ldf.fi/history/sparql", w_file, query_file.read())
 
 def histo_linking():
-    query_file = open("queries/histo_place_linking.sparql", "r")
+    query_file = open("queries/linking/histo_place_linking.sparql", "r")
     w_file = open("graphs/histo_place_links_1.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
 
 def histo_linking2():
-    query_file = open("queries/histo_place_linking2.sparql", "r")
+    query_file = open("queries/linking/histo_place_linking2.sparql", "r")
     w_file = open("graphs/histo_place_links_2.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
 
@@ -90,7 +91,7 @@ def nbf_event_places_construct():
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
 
 def create_person_ontology():
-    query_file = open("queries/linking/person_ontology_creation.sparql", "r")
+    query_file = open("queries/linking/new_person_ontology.sparql", "r")
     w_file = open("constructed/person_ontology.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
 
@@ -99,4 +100,8 @@ def same_birth_place():
     w_file = open("constructed/hehe/same_birth_places.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
 
+def place_linking_to_nbf():
+    query_file = open("queries/linking/place_rel_to_nbf.sparql", "r")
+    w_file = open("graphs/bad_places.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
 

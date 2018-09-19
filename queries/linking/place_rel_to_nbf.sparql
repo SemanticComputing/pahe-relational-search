@@ -1,0 +1,14 @@
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX relse: <http://ldf.fi/relse/>
+
+CONSTRUCT {
+  ?rel_place relse:nbf ?nbf_place .
+}
+WHERE {
+  ?nbf_place a nbf:Place .
+  ?rel_place a relse:Place .
+  ?nbf_place skos:prefLabel ?label .
+  ?rel_place skos:prefLabel ?label .
+}

@@ -6,6 +6,8 @@ PREFIX relse: <http://ldf.fi/relse/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
 BASE <http://ldf.fi/relse/>
+PREFIX re: <http://www.w3.org/2000/10/swap/reason#>
+PREFIX rel: <http://purl.org/vocab/relationship/>
 
 CONSTRUCT {
   ?uri a relse:Relation ;
@@ -26,10 +28,12 @@ WHERE {
   ?relation relse:placeObject ?object .
   
   ?person nbf:kirjasampo ?subject .  # Not general
-  ?place a nbf:Place .
+  
+  ?place a relse:Place .
 
   ?place skos:prefLabel ?placeName .
   ?relation relse:placeName ?placeName .
+  FILTER(str(?placeName) != "Suomi") .
   
   ?relation relse:date ?dateRaw .
   ?relation relse:objectName ?bookName .

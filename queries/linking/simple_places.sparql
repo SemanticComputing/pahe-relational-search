@@ -1,0 +1,16 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX relse: <http://ldf.fi/relse/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+SELECT DISTINCT ?place ?label ?yso
+WHERE {
+  ?place a nbf:Place .
+  ?relation a relse:Relation .
+  ?relation relse:placeObject ?place .
+  ?place skos:prefLabel ?label .
+  filter(lang(?label) = 'fi') .
+  optional {
+    ?place nbf:yso ?yso .
+  }
+} 

@@ -2,19 +2,26 @@ PREFIX schema: <http://schema.org/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX nbf:	<http://ldf.fi/nbf/>
 PREFIX relse: <http://ldf.fi/relsearch/>
-BASE <http://ldf.fi/relsearch/>
+BASE <http://ldf.fi/relse/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
 
 CONSTRUCT {
   ?uri a schema:Person ;
     schema:relatedLink ?link ;
     owl:sameAs ?person ;
-    skos:prefLabel ?label .
+    foaf:focus ?focus ;
+    skos:prefLabel ?name .
 }
 WHERE {
   ?person a nbf:PersonConcept .
-  ?person skos:prefLabel ?label .
+  ?person skosxl:prefLabel ?label .
+  ?label skos:prefLabel ?name .
   ?person schema:relatedLink ?link .
+  ?person foaf:focus ?focus .
+  #BIND(strbefore(str(?label), ")") as ?before) .
+  #BIND(concat(?before, ")") as ?name) .
   BIND(REPLACE(str(?person), "http://ldf.fi/nbf/", "", "i") AS ?id) .
   BIND(URI(CONCAT("person",?id)) as ?uri) .
 }

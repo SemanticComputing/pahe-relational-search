@@ -1,3 +1,4 @@
+PREFIX nbf:	<http://ldf.fi/nbf/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX schema: <http://schema.org/>
 PREFIX nbf:	<http://ldf.fi/nbf/>
@@ -15,11 +16,11 @@ CONSTRUCT {
     ?uri a rel:Relation ;
         rel:relationType rel:deathPlace ;
         rel:personSubject ?person ;
-        rel:placeObject ?place ;
+        rel:placeObject ?rel_place ;
 	rel:source ?death ;
         rel:date ?deathtime ;
 	skos:prefLabel ?description ;
-	rel:sourceName "Semanttinen Kansallisbiografia"@fi ;
+	rel:sourceName "Semanttinen Kansallisbiografia" ;
 	rel:sourceLink ?death ;
 }
 
@@ -28,14 +29,18 @@ WHERE {
     VALUES ?person_class { gvp:PersonConcept foaf:Person }
     ?person a|(a/rdfs:subClassOf+) ?person_class .
     ?death crm:P100_was_death_of/^foaf:focus ?person .
-    ?death ?any ?place . # nbf:place!
-    ?place a|(a/rdfs:subClassOf+) ?place_class . 
+    ?death nbf:place ?place . # nbf:place tai ?any
+    ?place a|(a/rdfs:subClassOf+) ?place_class .
+
+    ?place skos:prefLabel ?placeName .
+  	FILTER(lang(?placeName) = 'fi') .
+  	?rel_place a rel:Place .
+  	?rel_place skos:prefLabel ?placeName .
 
     ?death nbf:time ?dtime . # Not general!
     ?dtime gvp:estStart ?deathtime .
     BIND (year(xsd:date(?deathtime)) As ?year)
 
-    ?place skos:prefLabel ?placeName .
 
     ?person skosxl:prefLabel ?personLabel .
     ?personLabel skos:prefLabel ?personName .
