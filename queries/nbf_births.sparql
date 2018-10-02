@@ -20,7 +20,7 @@ CONSTRUCT {
     rel:source ?birth ;
     rel:date ?birthTime ;
     skos:prefLabel ?description ;
-    rel:sourceName "Tapahtuma Semanttisessa Kansallisbiografiassa" ;
+    rel:sourceName "Tapahtuma Semanttisessa kansallisbiografiassa" ;
     rel:sourceLink ?birth ;
 }
 

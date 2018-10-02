@@ -105,3 +105,22 @@ def place_linking_to_nbf():
     w_file = open("graphs/bad_places.ttl", "w")
     execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
 
+# fng
+
+def fng_construct():
+    query_file = open("queries/fng_construct.sparql", "r")
+    w_file = open("constructed/fng_depicts_place.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
+
+# filtering relations to only dead people
+
+def only_dead_people():
+    query_file = open("queries/linking/only_dead_people.sparql", "r")
+    w_file = open("constructed/person_ontology.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())
+
+def filter_relations():
+    query_file = open("queries/filter_relations.sparql", "r")
+    w_file = open("constructed/relations.ttl", "w")
+    execute_query("http://localhost:3030/ds/query", w_file, query_file.read())

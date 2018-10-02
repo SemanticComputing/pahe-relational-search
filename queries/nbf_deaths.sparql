@@ -20,7 +20,7 @@ CONSTRUCT {
 	rel:source ?death ;
         rel:date ?deathtime ;
 	skos:prefLabel ?description ;
-	rel:sourceName "Semanttinen Kansallisbiografia" ;
+	rel:sourceName "Tapahtuma Semanttisessa kansallisbiografiassa" ;
 	rel:sourceLink ?death ;
 }
 
@@ -49,6 +49,6 @@ WHERE {
 
     BIND(uri(encode_for_uri(concat(str(?person), str(?place), "death_place", str(?death)))) as ?uri) .
 
-    BIND(concat(str(?givenName), " ", str(?familyName), " on kuollut paikkassa ", str(?placeName), " vuonna ", str(?year), ".") as ?description) .
+    BIND(concat(str(?givenName), " ", str(?familyName), " on kuollut paikassa ", str(?placeName), " vuonna ", str(?year), ".") as ?description) .
 
 }

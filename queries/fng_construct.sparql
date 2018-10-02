@@ -1,0 +1,45 @@
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX relse: <http://ldf.fi/relse/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+BASE <http://ldf.fi/relse/>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX gvp: <http://vocab.getty.edu/ontology#>
+
+CONSTRUCT {
+  ?relation a relse:Relation ;
+    relse:personSubject ?subject ;
+    relse:placeObject ?object ;
+    skos:prefLabel ?description ;
+    relse:relationType ?type ;
+    relse:source ?source ;
+    relse:date ?date ;
+    relse:sourceLink ?source ;
+    relse:date ?date ;
+    relse:sourceName ?sourceName ;
+    skos:prefLabel ?betterLabel ;
+    
+}
+WHERE {
+  ?relation a relse:Relation .
+  ?relation relse:source ?source .
+  ?relation relse:relationType ?type .
+  ?relation relse:personSubject ?subject .
+  ?relation relse:placeObject ?object .
+  optional {
+    ?relation relse:date ?date .
+  }
+  ?relation relse:sourceName ?sourceName .
+  ?relation skos:prefLabel ?label .
+  BIND(STRAFTER(?label, "on luonut") AS ?after) .
+  
+  ?subject skosxl:prefLabel ?personLabel .
+  ?personLabel schema:givenName ?givenName .
+  ?personLabel schema:familyName ?familyName .
+  
+  BIND(concat(?givenName, " ", ?familyName, " on luonut", ?after) AS ?betterLabel) .
+}

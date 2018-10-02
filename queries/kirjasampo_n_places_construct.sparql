@@ -28,6 +28,7 @@ WHERE {
   ?relation relse:placeObject ?object .
   
   ?person nbf:kirjasampo ?subject .  # Not general
+  ?person schema:relatedLink ?bio .
   
   ?place a relse:Place .
 
@@ -43,7 +44,7 @@ WHERE {
   ?personLabel schema:familyName ?familyName .
   ?personLabel schema:givenName ?givenName .
   
-  BIND(replace(str(?source), "http://seco.tkk.fi/", "https://www.kirjasampo.fi/fi/kulsa/") as ?saha_replaced) .
+  BIND(replace(str(?source), "http://seco.tkk.fi/saha3/", "https://www.kirjasampo.fi/fi/kulsa/saha3%253A") as ?saha_replaced) .
   BIND(replace(str(?saha_replaced), "http://www.btj.fi/at_", "https://www.kirjasampo.fi/fi/kulsa/http%253A%252F%252Fwww.btj.fi%252Fft_") as ?btj_replaced) .
   BIND(uri(replace(str(?btj_replaced), "http://www.yso.fi/onto/kaunokki#", "https://www.kirjasampo.fi/fi/kulsa/kauno%253A")) as ?sampoLink) .
   

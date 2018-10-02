@@ -1,0 +1,40 @@
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX nbf:	<http://ldf.fi/nbf/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX relse: <http://ldf.fi/relse/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX gvp: <http://vocab.getty.edu/ontology#>
+BASE <http://ldf.fi/relse/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+CONSTRUCT {
+  ?relation a relse:Relation ;
+    relse:date ?date ;
+    relse:personSubject ?subject ;
+    relse:placeObject ?object ;
+    relse:relationType ?type ;
+    relse:source ?source ;
+    relse:sourceLink ?sourceLink ;
+    relse:sourceName ?sourceName ;
+    skos:prefLabel ?label .
+}
+WHERE {
+  ?relation a relse:Relation ;
+            relse:relationType ?type ;
+            relse:personSubject ?subject ;
+            relse:placeObject ?object ;
+            relse:source ?source ;
+            relse:sourceLink ?sourceLink ;
+            relse:sourceName ?sourceName ;
+            skos:prefLabel ?label .
+  OPTIONAL {
+    ?relation relse:date ?date .
+  }
+  ?relPerson a schema:Person .
+  ?relPerson owl:sameAs ?subject .
+  ?object relse:nbf ?nbfPlace .
+}

@@ -6,6 +6,9 @@ PREFIX relse: <http://ldf.fi/relse/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
 BASE <http://ldf.fi/relse/>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX gvp: <http://vocab.getty.edu/ontology#>
 
 CONSTRUCT {
   ?uri a relse:Relation ;
@@ -17,7 +20,7 @@ CONSTRUCT {
     relse:date ?date ;
     relse:sourceName "Kirjan tiedot Kansalliskirjaston tietokannassa"@fi ;
     relse:sourceLink ?source ;
-    
+    relse:date ?birthTime . # birthdate as the earlies possible date for the relation
 }
 WHERE {
   ?relation a relse:Relation .
@@ -35,6 +38,12 @@ WHERE {
   ?person skosxl:prefLabel ?personLabel .
   ?personLabel schema:familyName ?familyName .
   ?personLabel schema:givenName ?givenName .
+  
+  OPTIONAL {
+    ?birth crm:P98_brought_into_life/^foaf:focus ?person .
+    ?birth nbf:time ?time . # Not general!
+    ?time gvp:estStart ?birthTime .
+  }
   
   BIND(uri(encode_for_uri(concat(str(?person), str(?place), str(?source), "work_depicts"))) as ?uri) .
   BIND(concat(str(?givenName), " ", str(?familyName), " on merkitty tekijäksi kirjalliseen teokseen '", str(?shortenedName), "' joka kuvaa paikkaa ", str(?placeName), ".") as ?description) .

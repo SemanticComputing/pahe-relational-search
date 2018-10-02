@@ -66,11 +66,11 @@ def schema(g):
 
     g.add((rel.letterSentFrom, namespace.RDF.type, rel.RelationType))
     g.add((rel.letterSentFrom, namespace.SKOS.broader, rel.letters))
-    g.add((rel.letterSentFrom, namespace.SKOS.prefLabel, Literal('Lähettetty kirje paikasta', lang='fi')))
+    g.add((rel.letterSentFrom, namespace.SKOS.prefLabel, Literal('Kirje lähetetty paikasta', lang='fi')))
 
     g.add((rel.letterReceivedFrom, namespace.RDF.type, rel.RelationType))
     g.add((rel.letterReceivedFrom, namespace.SKOS.broader, rel.letters))
-    g.add((rel.letterReceivedFrom, namespace.SKOS.prefLabel, Literal('Vastaanotettu kirje paikasta', lang='fi')))
+    g.add((rel.letterReceivedFrom, namespace.SKOS.prefLabel, Literal('Kirje vastaanotettu paikasta', lang='fi')))
 
 
     # created work relates to place
